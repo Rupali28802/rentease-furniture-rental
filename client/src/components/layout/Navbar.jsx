@@ -1,4 +1,10 @@
-import { FaHeart, FaShoppingCart, FaUser, FaBars } from "react-icons/fa";
+import {
+  FaHeart,
+  FaShoppingCart,
+  FaUser,
+  FaBars,
+  FaCouch,
+} from "react-icons/fa";
 
 const Navbar = () => {
   return (
@@ -16,7 +22,7 @@ const Navbar = () => {
           <p className="cursor-pointer hover:text-green-700">Become Partner</p>
         </div>
       </div>
-     <hr className="border-gray-300" />
+      <hr className="border-gray-300" />
       {/* MAIN NAVBAR */}
 
       <div className="bg-white sticky top-0 z-50 shadow-sm">
@@ -29,7 +35,9 @@ const Navbar = () => {
                 <FaBars />
               </button>
 
-              <h1 className="text-3xl font-bold cursor-pointer">
+              <h1 className="text-3xl font-bold cursor-pointer flex flex-col-2 gap-2">
+                <FaCouch className="text-green-700 text-3xl mt-0.5 " />
+
                 <span className="text-green-700">Furni</span>
 
                 <span className="text-red-500">Rent</span>
