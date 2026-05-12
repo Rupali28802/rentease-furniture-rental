@@ -1,5 +1,6 @@
 import Product from "../models/Product.js";
 import Review from "../models/review.js";
+import Notification from "../models/Notification.js";
 import fs from "fs";
 
 
@@ -10,6 +11,13 @@ export const createProduct = async (req, res) => {
       ...req.body,
       image: req.file ? req.file.path : req.body.image,
     });
+
+        await Notification.create({
+          user: req.user._id,
+          title: "Product Added 🏷️",
+          message: `${product.name} added successfully`,
+          type: "SYSTEM",
+        });
 
     res.status(201).json({
       message: "Product created successfully",
@@ -151,6 +159,12 @@ export const updateProduct = async (req, res) => {
     }
 
     product = await product.save();
+     await Notification.create({
+       user: req.user._id,
+       title: "Product Updated ✏️",
+       message: `${product.name} updated successfully`,
+       type: "SYSTEM",
+     });
 
     res.json({
       message: "Product updated successfully",
@@ -176,6 +190,14 @@ export const deleteProduct = async (req, res) => {
     }
 
     await product.deleteOne();
+
+    await Notification.create({
+      user: req.user._id,
+      title: "Product Deleted ❌",
+      message: `${product.name} removed successfully`,
+      type: "SYSTEM",
+    });
+
 
     res.json({ message: "Product deleted successfully" });
   } catch (error) {

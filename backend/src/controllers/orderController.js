@@ -1,11 +1,14 @@
 import Cart from "../models/Cart.js";
 import User from "../models/User.js";
 import Order from "../models/Order.js";
+import Coupon from "../models/Coupon.js";
+import Notification from "../models/Notification.js";
+import { sendEmail } from "../utils/sendEmail.js";
 import Razorpay from "razorpay";
 
 export const placeOrder = async (req, res) => {
   try {
-    const { addressId } = req.body;
+    const { addressId,couponCode } = req.body;
 
     const user = await User.findById(req.user._id);
 
@@ -13,14 +16,14 @@ export const placeOrder = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 🏠 Get address
+    //  Get address
     const address = user.addresses.id(addressId);
 
     if (!address) {
       return res.status(404).json({ message: "Address not found" });
     }
 
-    // 🛒 Get cart items
+    //  Get cart items
     const cartItems = await Cart.find({ user: req.user._id }).populate(
       "product",
     );
@@ -29,16 +32,16 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
-    // 💰 total calculate
+    //  total calculate
     const totalAmount = cartItems.reduce(
       (acc, item) => acc + item.totalRent + item.deposit,
       0,
     );
 
-    // 🎟 Coupon apply (agar diya ho)
+    // Coupon apply (agar diya ho)
     let discount = 0;
-    if (req.body.couponCode) {
-      const coupon = await Coupon.findOne({ code: req.body.couponCode });
+    if (couponCode) {
+      const coupon = await Coupon.findOne({ code: couponCode });
       if (
         coupon &&
         coupon.expiry >= new Date() &&
@@ -49,13 +52,13 @@ export const placeOrder = async (req, res) => {
         } else {
           discount = coupon.discountValue;
         }
-        totalAmount = totalAmount - discount; // ✅ final amount update
+        totalAmount = totalAmount - discount; // final amount update
         coupon.usedCount += 1;
         await coupon.save();
       }
     }
 
-    // 📦 create order
+    //  create order
     const order = await Order.create({
       user: req.user._id,
       items: cartItems.map((item) => ({
@@ -67,21 +70,61 @@ export const placeOrder = async (req, res) => {
         deposit: item.deposit,
       })),
       addresses: {
-        ...address.toObject(), // ✅ सारे fields आ जाएंगे
+        ...address.toObject(), //  सारे fields आ जाएंगे
       },
       totalAmount,
       discount,
-      coupon: req.body.couponCode || null,
-      status: "pending", // 🔥 important
+      coupon: couponCode || null,
+      status: "pending",
+      paymentStatus: "pending", //  important
+      activityLog: [
+        {
+          action: "Order placed",
+          updatedBy: req.user._id,
+        },
+      ],
     });
 
-    // 💳 create Razorpay order
+    //  notification
+    await Notification.create({
+      user: req.user._id,
+      title: "Order Placed 🎉",
+      message: `Your order #${order._id} has been placed`,
+      type: "ORDER",
+    });
+
+     // 📧 EMAIL
+    await sendEmail({
+      to: user.email,
+
+      subject:
+        "Order Placed Successfully",
+
+      text: `Hello ${user.name},
+
+Your order ${order._id} has been placed successfully.`,
+
+      html: `
+        <h2>Order Confirmed 🎉</h2>
+
+        <p>Hello ${user.name},</p>
+        <p>Your order has been placed successfully.</p>
+
+        <p><strong>Order ID:</strong> ${order._id}</p>
+
+        <p><strong>Total Amount:</strong> ₹${totalAmount}</p>
+      `,
+    });
+
+
+
+    //  create Razorpay order
     const razorpayOrder = await razorpay.orders.create({
       amount: totalAmount * 100, // paise
       currency: "INR",
       receipt: `order_${order._id}`,
     });
-
+  await Cart.deleteMany({ user: req.user._id });
     res.status(201).json({
       message: "Order placed successfully",
       order,
@@ -119,6 +162,12 @@ export const updateOrderStatus = async (req, res) => {
     });
 
     await order.save();
+      await Notification.create({
+        user: order.user,
+        title: "Order Update ",
+        message: `Your order status is now ${status}`,
+        type: "ORDER",
+      });
     res.json({ message: "Order status updated", order });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -1,7 +1,8 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
-
+import Notification from "../models/Notification.js";
+import { sendEmail } from "../utils/sendEmail.js";
 // REGISTER USER
 export const registerUser = async (req, res) => {
   try {
@@ -54,6 +55,39 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
       mobile,
       role: "user", // 🔒 force user
+    });
+
+    // 🔔 CREATE NOTIFICATION
+    await Notification.create({
+      user: user._id,
+
+      title: "Welcome to RentEase 🎉",
+
+      message: "Your account created successfully",
+
+      type: "SYSTEM",
+    });
+
+     // 📧 SEND EMAIL
+    await sendEmail({
+      to: user.email,
+
+      subject: "Welcome to RentEase",
+
+      text: `Hello ${user.name},
+
+Welcome to RentEase 🚀
+
+Your account has been created successfully.`,
+
+      html: `
+        <h2>Welcome to RentEase 🚀</h2>
+
+        <p>Hello ${user.name},</p>
+
+        <p>Your account has been created successfully.</p>
+   <p>Enjoy renting furniture & appliances with ease.</p>
+      `,
     });
 
     // REMOVE PASSWORD
