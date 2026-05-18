@@ -15,15 +15,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: {
       type: String,
       required: true,
       select: false,
     },
-    resetPasswordToken: String,
-
-    resetPasswordExpire: Date,
     mobile: {
       type: String,
       match: /^[0-9]{10}$/,
@@ -34,6 +32,9 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin", "vendor"],
       default: "user",
     },
+    resetPasswordToken: String,
+
+    resetPasswordExpire: Date,
     addresses: [
       {
         firstName: {

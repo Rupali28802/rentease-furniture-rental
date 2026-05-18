@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import addressRoutes from "./routes/addressRoutes.js"
 import productRoutes from "./routes/productRoutes.js"
@@ -12,6 +13,7 @@ const app = express();
 
 // middleware
 app.use(express.json());
+app.use(cors());
 
 // auth route
 app.use("/api/auth", authRoutes);
