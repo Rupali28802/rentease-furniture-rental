@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { generateToken } from "../utils/generateToken.js";
 import Notification from "../models/Notification.js";
 import { sendEmail } from "../utils/sendEmail.js";

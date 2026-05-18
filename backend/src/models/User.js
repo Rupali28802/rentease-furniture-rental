@@ -8,8 +8,9 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     age: {
-      type:Number,
-    min: 18,},
+      type: Number,
+      min: 18,
+    },
     email: {
       type: String,
       required: true,
@@ -20,10 +21,13 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
+    resetPasswordToken: String,
+
+    resetPasswordExpire: Date,
     mobile: {
-      type:String,
-    match: /^[0-9]{10}$/,
-  },
+      type: String,
+      match: /^[0-9]{10}$/,
+    },
 
     role: {
       type: String,

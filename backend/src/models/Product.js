@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema(
 
     tenureOptions: {
       type: [Number],
-      enum: TENURE_OPTIONS,
+      enum:TENURE_OPTIONS.map((item) => item.value),
       default: [1, 3, 6],
     },
     maxTenure: { type: Number, default: 12 },
