@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -7,6 +8,7 @@ import {
   FaCouch,
   FaMoon,
   FaSun,
+  FaSearch,
 } from "react-icons/fa";
 
 const DesktopNavbar = ({
@@ -48,23 +50,29 @@ const DesktopNavbar = ({
   };
 
   return (
-    <div className="hidden lg:flex items-center justify-between gap-4">
-      {/* LEFT */}
+    <div className="hidden lg:flex items-center justify-between gap-6">
+      {/* ========================================= */}
+      {/* LOGO */}
+      {/* ========================================= */}
 
       <h1
         onClick={() => navigate("/")}
-        className="flex items-center gap-2 text-3xl font-bold cursor-pointer"
+        className="flex items-center gap-2 text-3xl font-bold cursor-pointer shrink-0"
       >
         <FaCouch className="text-green-700" />
 
-        <div className="flex items-center gap-0">
-          <span className="text-green-700 text-500">Furni</span>
+        <span className="text-green-700">
+          Furni
+        </span>
 
-          <span className="text-red-500 text-500">Rent</span>
-        </div>
+        <span className="text-red-500">
+          Rent
+        </span>
       </h1>
 
+      {/* ========================================= */}
       {/* SEARCH */}
+      {/* ========================================= */}
 
       <div className="flex flex-1 max-w-2xl">
         <input
@@ -72,21 +80,25 @@ const DesktopNavbar = ({
           placeholder="Search furniture, appliances..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          onKeyDown={(e) =>
+            e.key === "Enter" && handleSearch()
+          }
           className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-5 py-3 rounded-l-xl outline-none"
         />
 
         <button
           onClick={handleSearch}
-          className="bg-green-700 text-white px-8 rounded-r-xl"
+          className="bg-green-700 hover:bg-green-800 text-white px-8 rounded-r-xl flex items-center justify-center"
         >
-          Search
+          <FaSearch />
         </button>
       </div>
 
+      {/* ========================================= */}
       {/* RIGHT */}
+      {/* ========================================= */}
 
-      <div className="flex items-center gap-10 dark:text-white">
+      <div className="flex items-center gap-10 dark:text-white shrink-0">
         {/* THEME */}
 
         <button onClick={toggleTheme}>
