@@ -7,6 +7,7 @@ import cartRoutes from "./routes/cartRoutes.js"
 import orderRoutes from "./routes/orderRoutes.js";
 import couponRoutes from "./routes/couponRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js"
+import heroBannerRoutes from "./routes/heroBannerRoutes.js"
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(cors());
 
 // auth route
 app.use("/api/auth", authRoutes);
+app.use("/api/hero-banners", heroBannerRoutes);
 app.use("/api/address",addressRoutes)
 app.use("/api/products", productRoutes);
 app.use("/api/cart",cartRoutes)

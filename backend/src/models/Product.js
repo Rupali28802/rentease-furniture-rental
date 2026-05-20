@@ -11,17 +11,19 @@ const productSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      enum: Object.values(CATEGORIES),
+      enum: CATEGORIES.map((c) => c.slug), // "furniture", "appliances", etc.
+      
       required: true,
       index: true,
     },
+  
 
     pricePerMonth: { type: Number, required: true, min: 0 },
     deposit: { type: Number, required: true, min: 0 },
 
     tenureOptions: {
       type: [Number],
-      enum:TENURE_OPTIONS.map((item) => item.value),
+      enum: TENURE_OPTIONS.map((item) => item.value),
       default: [1, 3, 6],
     },
     maxTenure: { type: Number, default: 12 },

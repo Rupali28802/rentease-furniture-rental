@@ -193,7 +193,7 @@ export const deleteProduct = async (req, res) => {
 
     await Notification.create({
       user: req.user._id,
-      title: "Product Deleted ❌",
+      title: "Product Deleted ",
       message: `${product.name} removed successfully`,
       type: "SYSTEM",
     });

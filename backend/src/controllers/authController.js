@@ -7,7 +7,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 // REGISTER USER
 export const registerUser = async (req, res) => {
   try {
-    const { name, age, email, password, mobile } = req.body;
+    const { name, age, email, password, mobile,role } = req.body;
 
     // VALIDATION
     if (!name || !email || !password) {
@@ -55,7 +55,7 @@ export const registerUser = async (req, res) => {
       email: email.toLowerCase(),
       password: hashedPassword,
       mobile,
-      role: "user", // 🔒 force user
+      role:role|| "user", // 🔒 force user
     });
 
     // 🔔 CREATE NOTIFICATION
@@ -97,10 +97,14 @@ Your account has been created successfully.`,
     res.status(201).json({
       message: "User registered successfully",
       user: safeUser,
-      token: generateToken({
-        id: user._id,
-        role: user.role,
-      }),
+      token: generateToken(
+      //   {
+      //   id: user._id,
+      //   role: user.role,
+        
+      // }
+      user
+    ),
     });
   } catch (error) {
     res.status(500).json({ message: "Server error, please try again later" });
@@ -142,10 +146,13 @@ export const loginUser = async (req, res) => {
     res.json({
       message: "Login successful",
       user: safeUser,
-      token: generateToken({
-        id: user._id,
-        role: user.role,
-      }),
+      token: generateToken(
+      //   {
+      //   id: user._id,
+      //   role: user.role,
+      // }
+      user
+    ),
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
