@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-import { CATEGORIES } from "../constants/categories.js";
+import {
+  CATEGORY_LIST,
+  CATEGORY_TENURE_RULES,
+} from "../constants/categories.js";
 import { TENURE_OPTIONS } from "../constants/tenureOptions.js";
 
 const productSchema = new mongoose.Schema(
@@ -11,21 +14,24 @@ const productSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      enum: CATEGORIES.map((c) => c.slug), // "furniture", "appliances", etc.
-      
+      enum: CATEGORY_LIST.map((c) => c.slug), // "furniture", "appliances", etc.
+
       required: true,
       index: true,
     },
-  
 
     pricePerMonth: { type: Number, required: true, min: 0 },
     deposit: { type: Number, required: true, min: 0 },
 
     tenureOptions: {
-      type: [Number],
-      enum: TENURE_OPTIONS.map((item) => item.value),
-      default: [1, 3, 6],
+  type: [Number],
+  validate: {
+    validator: function(values) {
+      const rules = CATEGORY_TENURE_RULES[this.category?.toUpperCase()];
+      return rules ? values.every(v => rules.includes(v)) : true;
     },
+    message: props => `Invalid tenure option for category ${props.value}`,
+  }},
     maxTenure: { type: Number, default: 12 },
     renewable: { type: Boolean, default: true },
 

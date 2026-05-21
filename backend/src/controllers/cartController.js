@@ -3,7 +3,6 @@ import Product from "../models/Product.js";
 import Notification from "../models/Notification.js";
 import mongoose from "mongoose";
 
-
 // ✅ ADD / UPDATE CART
 export const addToCart = async (req, res) => {
   try {
@@ -50,6 +49,12 @@ export const addToCart = async (req, res) => {
     if (!product.tenureOptions.includes(Number(tenure))) {
       return res.status(400).json({
         message: `Invalid tenure. Allowed: ${product.tenureOptions}`,
+      });
+    }
+    // ✅ delivery date validation
+    if (new Date(deliveryDate) < new Date()) {
+      return res.status(400).json({
+        message: "Delivery date must be in the future",
       });
     }
 
@@ -191,7 +196,7 @@ export const updateCart = async (req, res) => {
     cartItem.totalRent =
       cartItem.product.pricePerMonth * cartItem.tenure * cartItem.quantity;
 
-    cartItem.deposit = cartItem.product.deposit;
+    cartItem.deposit = cartItem.product.deposit*cartItem.quantity;
 
     await cartItem.save();
 
