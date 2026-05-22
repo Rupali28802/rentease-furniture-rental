@@ -27,22 +27,34 @@ const HeroBannerSlider = () => {
     setIndex((prev) => (prev - 1 + banners.length) % banners.length);
 
   return (
-    <div className="relative w-full h-[80vh] overflow-hidden">
+    <div className="relative w-full h-[67.7vh] overflow-hidden">
       {banners.map((banner, i) => (
         <div
           key={i}
-          className={`absolute inset-0 transition-opacity duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 transition-opacity  duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
           style={{
             backgroundImage: `url(http://localhost:5000/uploads/hero/${banner.image})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="bg-black/40 w-full h-full flex items-center justify-start px-6 md:px-12">
-            <div className="text-white w-full md:w-1/2 lg:w-2/5 ml-2 max-w-130 md:ml-4">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl  font-bold mb-4 max-w-80">{banner.title}</h1>
-              <p className="text-sm sm:text-base md:text-lg mb-3 max-w-80">{banner.subtitle}</p>
-              <ul className="flex md:text-sm  gap-4 mb-6">
+          <div className="bg-black/40 w-full h-100 flex items-center justify-start px-6 md:px-12">
+            <div className="text-white  md:w-1/2 lg:w-3/7 ml-4 md:ml-20 ">
+              <h1
+                className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 max-w-90 
+                   tracking-tight sm:tracking-normal md:tracking-wide lg:tracking-wider"
+              >
+                {banner.title}
+              </h1>
+
+              <p
+                className="text-sm sm:text-base md:text-lg mb-3 max-w-80 
+                  tracking-normal  "
+              >
+                {banner.subtitle}
+              </p>
+
+              <ul className="flex md:text-sm gap-4 mb-6">
                 {banner.features?.map((f, idx) => (
                   <li
                     key={idx}
@@ -52,6 +64,7 @@ const HeroBannerSlider = () => {
                   </li>
                 ))}
               </ul>
+
               <a
                 href={banner.link}
                 className="bg-green-800 hover:bg-green-700 text-white px-6 py-2 rounded"
@@ -60,7 +73,6 @@ const HeroBannerSlider = () => {
               </a>
             </div>
           </div>
-          
         </div>
       ))}
 
