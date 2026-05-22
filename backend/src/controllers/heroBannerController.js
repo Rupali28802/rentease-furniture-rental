@@ -34,7 +34,7 @@ export const addBanner = async (req, res) => {
       });
     }
 
-    const image = `/uploads/hero/${req.file.filename}`;
+    const image = req.file.filename;
 
     const banner = await HeroBanner.create({
       title,
@@ -84,7 +84,7 @@ export const updateBanner = async (req, res) => {
       if (banner.image) {
         const oldImagePath = path.join(
           "uploads/hero",
-          path.basename(banner.imageUrl),
+          path.basename(banner.image),
         );
 
         if (fs.existsSync(oldImagePath)) {

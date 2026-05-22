@@ -1,99 +1,94 @@
-import { FaTruck, FaUndo, FaWallet, FaShieldAlt } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { api } from "../../api/axios";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const Hero = () => {
+const HeroBannerSlider = () => {
+  const [banners, setBanners] = useState([]);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+  
+      api.get("/hero-banners")
+      .then((res) => setBanners(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    if (banners.length === 0) return;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % banners.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [banners]);
+
+  const nextSlide = () => setIndex((prev) => (prev + 1) % banners.length);
+  const prevSlide = () =>
+    setIndex((prev) => (prev - 1 + banners.length) % banners.length);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-6 ">
-      {/* HERO CARD */}
-
-      <div className="bg-[#f5efe7] rounded-3xl h-92 overflow-hidden">
-        <div className="grid lg:grid-cols-2 items-center">
-          {/* LEFT CONTENT */}
-
-          <div className="p-6 lg:p-9">
-            <h1 className="text-4xl lg:text-5xl font-bold leading-tight text-gray-900">
-              Premium Furniture &
-              <br />
-              Appliances on Rent
-            </h1>
-
-            <p className="mt-4 text-gray-600 text-lg">
-              Stylish. Affordable. Flexible.
-            </p>
-
-            <p className="text-gray-600 mt-1">Rent what you love.</p>
-
-            {/* FEATURES */}
-
-            <div className="hidden lg:flex items-center gap-6 mt-6 text-sm text-gray-700">
-              <div className="flex items-center gap-2">
-                <FaTruck className="text-green-700" />
-                <span>Free Delivery</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <FaUndo className="text-green-700" />
-                <span>Easy Returns</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <FaWallet className="text-green-700" />
-                <span>No Cost EMI</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <FaShieldAlt className="text-green-700" />
-                <span>Best Quality</span>
-              </div>
+    <div className="relative w-full h-[80vh] overflow-hidden">
+      {banners.map((banner, i) => (
+        <div
+          key={i}
+          className={`absolute inset-0 transition-opacity duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
+          style={{
+            backgroundImage: `url(http://localhost:5000/uploads/hero/${banner.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="bg-black/40 w-full h-full flex items-center justify-start px-12">
+            <div className="text-white max-w-lg">
+              <h1 className="text-4xl font-bold mb-4">{banner.title}</h1>
+              <p className="mb-4">{banner.subtitle}</p>
+              <ul className="flex gap-4 mb-6">
+                {banner.features?.map((f, idx) => (
+                  <li
+                    key={idx}
+                    className="text-sm bg-white/20 px-3 py-1 rounded"
+                  >
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={banner.link}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
+              >
+                {banner.buttonText}
+              </a>
             </div>
-
-            {/* BUTTON */}
-
-            <button className="mt-6 bg-green-700 hover:bg-green-800 transition text-white px-8 py-4 rounded-xl font-semibold">
-              Explore Now
-            </button>
-          </div>
-
-          {/* RIGHT IMAGE */}
-
-          <div className="relative h-">
-            <img
-              src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1470&auto=format&fit=crop"
-              alt="sofa"
-              className="w-full h-full object-cover"
-            />
           </div>
         </div>
-      </div>
+      ))}
 
-      {/* MOBILE FEATURES */}
+      {/* Navigation */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 text-white p-3 rounded-full hover:bg-white/50"
+      >
+        <FaArrowLeft size={20} />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 text-white p-3 rounded-full hover:bg-white/50"
+      >
+        <FaArrowRight size={20} />
+      </button>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-        <div className="bg-white rounded-2xl p-4 flex flex-col items-center shadow-sm">
-          <FaTruck className="text-green-700 text-2xl" />
-
-          <p className="mt-2 text-sm font-medium">Free Delivery</p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-4 flex flex-col items-center shadow-sm">
-          <FaUndo className="text-green-700 text-2xl" />
-
-          <p className="mt-2 text-sm font-medium">Easy Returns</p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-4 flex flex-col items-center shadow-sm">
-          <FaWallet className="text-green-700 text-2xl" />
-
-          <p className="mt-2 text-sm font-medium">No Cost EMI</p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-4 flex flex-col items-center shadow-sm">
-          <FaShieldAlt className="text-green-700 text-2xl" />
-
-          <p className="mt-2 text-sm font-medium">Best Quality</p>
-        </div>
+      {/* Dots */}
+      <div className="absolute bottom-4 w-full flex justify-center gap-2">
+        {banners.map((_, i) => (
+          <span
+            key={i}
+            onClick={() => setIndex(i)}
+            className={`w-3 h-3 rounded-full cursor-pointer ${i === index ? "bg-green-600" : "bg-white/50"}`}
+          ></span>
+        ))}
       </div>
     </div>
   );
 };
 
-export default Hero;
+export default HeroBannerSlider;
