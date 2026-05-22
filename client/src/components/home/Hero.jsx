@@ -38,11 +38,11 @@ const HeroBannerSlider = () => {
             backgroundPosition: "center",
           }}
         >
-          <div className="bg-black/40 w-full h-full flex items-center justify-start px-12">
-            <div className="text-white max-w-lg">
-              <h1 className="text-4xl font-bold mb-4">{banner.title}</h1>
-              <p className="mb-4">{banner.subtitle}</p>
-              <ul className="flex gap-4 mb-6">
+          <div className="bg-black/40 w-full h-full flex items-center justify-start px-6 md:px-12">
+            <div className="text-white w-full md:w-1/2 lg:w-2/5 ml-2 max-w-130 md:ml-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl  font-bold mb-4 max-w-80">{banner.title}</h1>
+              <p className="text-sm sm:text-base md:text-lg mb-3 max-w-80">{banner.subtitle}</p>
+              <ul className="flex md:text-sm  gap-4 mb-6">
                 {banner.features?.map((f, idx) => (
                   <li
                     key={idx}
@@ -54,12 +54,13 @@ const HeroBannerSlider = () => {
               </ul>
               <a
                 href={banner.link}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
+                className="bg-green-800 hover:bg-green-700 text-white px-6 py-2 rounded"
               >
                 {banner.buttonText}
               </a>
             </div>
           </div>
+          
         </div>
       ))}
 
