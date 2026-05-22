@@ -277,7 +277,7 @@
 
 // export default MobileMenu;
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 import {
   FaTimes,
@@ -414,9 +414,9 @@ const MobileMenu = ({
             <div>
               <h2 className="text-lg font-semibold">Hello, Guest</h2>
 
-              <button className="text-sm text-white/90 underline">
+              <Link to="/login" className="text-sm text-white/90 underline">
                 Login / Register
-              </button>
+              </Link>
             </div>
           </div>
         </div>
