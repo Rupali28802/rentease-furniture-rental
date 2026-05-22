@@ -7,7 +7,8 @@ import cartRoutes from "./routes/cartRoutes.js"
 import orderRoutes from "./routes/orderRoutes.js";
 import couponRoutes from "./routes/couponRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js"
-import heroBannerRoutes from "./routes/heroBannerRoutes.js"
+import heroBannerRoutes from "./routes/heroBannerRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js"
 import path from "path"
 import { fileURLToPath } from "url";
 
@@ -26,6 +27,7 @@ app.use(cors());
 // auth route
 app.use("/api/auth", authRoutes);
 app.use("/api/hero-banners", heroBannerRoutes);
+app.use("/api/categories",categoryRoutes)
 app.use("/api/address",addressRoutes)
 app.use("/api/products", productRoutes);
 app.use("/api/cart",cartRoutes)

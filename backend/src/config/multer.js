@@ -57,6 +57,8 @@ const storage = multer.diskStorage({
       dir = "uploads/blog";
     } else if (req.baseUrl.includes("users")) {
       dir = "uploads/users";
+    } else if (req.baseUrl.includes("categories")) {
+      dir = "uploads/categories";
     } else {
       // agar koi match na ho toh error throw kar do
       return cb(new Error("Upload folder not defined for this route"), null);
