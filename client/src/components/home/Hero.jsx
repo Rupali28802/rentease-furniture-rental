@@ -27,11 +27,11 @@ const HeroBannerSlider = () => {
     setIndex((prev) => (prev - 1 + banners.length) % banners.length);
 
   return (
-    <div className="relative w-full h-[67.7vh] overflow-hidden">
+    <div className="relative w-full h-[67.7vh] overflow-hidden ">
       {banners.map((banner, i) => (
         <div
           key={i}
-          className={`absolute inset-0 transition-opacity  duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-0 transition-opacity   duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
           style={{
             backgroundImage: `url(http://localhost:5000/uploads/hero/${banner.image})`,
             backgroundSize: "cover",
