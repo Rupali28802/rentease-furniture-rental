@@ -7,29 +7,34 @@ import fs from "fs";
 // CREATE PRODUCT
 export const createProduct = async (req, res) => {
   try {
+    
+    const galleryImages = req.files?.gallery
+      ? req.files.gallery.map((file) => file.path)
+      : req.body.gallery || [];
+
     const product = await Product.create({
       ...req.body,
-      image: req.file ? req.file.path : req.body.image,
+
+      image: req.files?.image ? req.files.image[0].path : req.body.image,
+
+      gallery: galleryImages,
     });
 
-        await Notification.create({
-          user: req.user._id,
-          title: "Product Added 🏷️",
-          message: `${product.name} added successfully`,
-          type: "SYSTEM",
-        });
+    await Notification.create({
+      user: req.user._id,
+      title: "Product Added 🏷️",
+      message: `${product.name} added successfully`,
+      type: "SYSTEM",
+    });
 
     res.status(201).json({
       message: "Product created successfully",
       product,
     });
   } catch (error) {
-    if (req.file) {
-      fs.unlink(req.file.path, (err) => {
-        if (err) console.log("File delete error:", err);
-      });
-    }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
@@ -116,7 +121,7 @@ export const getProductById = async (req, res) => {
       averageRating: avgRating,
       reviewCount: reviews.length,
     });
-    res.json(product);
+    
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

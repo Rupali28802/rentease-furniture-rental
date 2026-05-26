@@ -1,5 +1,5 @@
 // constants/categories.js
-export const CATEGORY_LIST = [
+export const CATEGORY_LIST = 
   [
     { _id: "1", name: "Sofa", slug: "sofa", image: "sofa.jpg" },
     { _id: "2", name: "Beds", slug: "beds", image: "bed.jpg" },
@@ -53,8 +53,8 @@ export const CATEGORY_LIST = [
       image: "pet.jpg",
     },
     { _id: "17", name: "Offers", slug: "offers", image: null },
-  ],
-];
+  ];
+
 
 export const CATEGORY_NAMES = {
   FURNITURE: "Furniture",

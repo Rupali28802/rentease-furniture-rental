@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import {
   CATEGORY_LIST,
+  CATEGORY_NAMES,
   CATEGORY_TENURE_RULES,
 } from "../constants/categories.js";
 import { TENURE_OPTIONS } from "../constants/tenureOptions.js";
