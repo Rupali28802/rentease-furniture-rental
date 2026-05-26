@@ -19,12 +19,12 @@ export const getCategories = async (req, res) => {
 export const addCategory = async (req, res) => {
   try {
     const { name, slug } = req.body;
-    if (!req.file) return res.status(400).json({ error: "Image required" });
+    // if (!req.file) return res.status(400).json({ error: "Image required" });
 
     const category = new Category({
       name,
       slug,
-      image: req.file.filename,
+      image: req.file ? req.file.filename : null,
     });
 
     await category.save();
