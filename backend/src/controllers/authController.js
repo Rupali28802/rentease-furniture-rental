@@ -10,25 +10,65 @@ export const registerUser = async (req, res) => {
     const { name, age, email, password, mobile,role } = req.body;
 
     // VALIDATION
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!name) {
+      return res.status(400).json({
+        field: "name",
+        message: "Name is required",
+      });
+    }
+
+    if (!age) {
+      return res.status(400).json({
+        field: "age",
+        message: "Age is required",
+      });
+    }
+
+    if (!email) {
+      return res.status(400).json({
+        field: "email",
+        message: "Email is required",
+      });
+    }
+
+    if (!mobile) {
+      return res.status(400).json({
+        field: "mobile",
+        message: "Mobile number is required",
+      });
+    }
+
+    if (!password) {
+      return res.status(400).json({
+        field: "password",
+        message: "Password is required",
+      });
     }
 
     if (age && age < 18) {
-      return res.status(400).json({ message: "Must be 18+ to register" });
+      return res
+        .status(400)
+        .json({ field: "age", message: "Must be 18+ to register" });
     }
 
     if (mobile && !/^[0-9]{10}$/.test(mobile)) {
-      return res.status(400).json({ message: "Invalid mobile number" });
+       
+      return res
+        .status(400)
+        .json({ field: "mobile", message: "Invalid mobile number" });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+
+      return res
+        .status(400)
+        .json({ field: "email", message: "Invalid email format" });
     }
 
     if (password.length < 6) {
       return res.status(400).json({
+        field: "password",
         message: "Password must be 6+ characters",
       });
     }
@@ -40,6 +80,7 @@ export const registerUser = async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({
+        field: "email",
         message: "Email already registered",
       });
     }
@@ -55,21 +96,21 @@ export const registerUser = async (req, res) => {
       email: email.toLowerCase(),
       password: hashedPassword,
       mobile,
-      role:role|| "user", // 🔒 force user
+      role:role|| "user", //Default
     });
 
-    // 🔔 CREATE NOTIFICATION
+    //  CREATE NOTIFICATION
     await Notification.create({
       user: user._id,
 
-      title: "Welcome to RentEase 🎉",
+      title: "Welcome to RentEase ",
 
       message: "Your account created successfully",
 
       type: "SYSTEM",
     });
 
-     // 📧 SEND EMAIL
+     //  SEND EMAIL
     await sendEmail({
       to: user.email,
 
@@ -77,12 +118,12 @@ export const registerUser = async (req, res) => {
 
       text: `Hello ${user.name},
 
-Welcome to RentEase 🚀
+Welcome to RentEase 
 
 Your account has been created successfully.`,
 
       html: `
-        <h2>Welcome to RentEase 🚀</h2>
+        <h2>Welcome to RentEase </h2>
 
         <p>Hello ${user.name},</p>
 
@@ -97,15 +138,9 @@ Your account has been created successfully.`,
     res.status(201).json({
       message: "User registered successfully",
       user: safeUser,
-      token: generateToken(
-      //   {
-      //   id: user._id,
-      //   role: user.role,
-        
-      // }
-      user
-    ),
+      token: generateToken({ id: user._id, role: user.role }),
     });
+    
   } catch (error) {
     res.status(500).json({ message: "Server error, please try again later" });
   }
@@ -117,9 +152,17 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // VALIDATION
-    if (!email || !password) {
+    if (!email) {
       return res.status(400).json({
-        message: "All fields are required",
+        field: "email",
+        message: "Email is required",
+      });
+    }
+
+    if (!password) {
+      return res.status(400).json({
+        field: "password",
+        message: "Password is required",
       });
     }
 
@@ -129,6 +172,7 @@ export const loginUser = async (req, res) => {
 
     if (!user) {
       return res.status(400).json({
+        field: "email",
         message: "User not found",
       });
     }
@@ -137,6 +181,7 @@ export const loginUser = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({
+        field: "password",
         message: "Invalid credentials",
       });
     }
@@ -146,13 +191,7 @@ export const loginUser = async (req, res) => {
     res.json({
       message: "Login successful",
       user: safeUser,
-      token: generateToken(
-      //   {
-      //   id: user._id,
-      //   role: user.role,
-      // }
-      user
-    ),
+      token: generateToken({ id: user._id, role: user.role }),
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -173,22 +212,37 @@ export const getMe = async (req, res) => {
 
 
 //  LOGOUT USER
+// export const logoutUser = async (req, res) => {
+//   try {
+//     // Frontend se refreshToken ya accessToken bhejna hoga
+//     const token = req.headers.authorization?.split(" ")[1];
+
+//     if (!token) {
+//       return res.status(400).json({ message: "No token provided" });
+//     }
+
+//     // Agar aap refresh token use kar rahe ho toh DB se delete karo
+//     const user = await User.findById(req.user.id);
+//     if (!user) {
+//       return res.status(400).json({ message: "User not found" });
+//     }
+
+//     // Refresh token ko null kar dena (invalidate)
+//     user.refreshToken = null;
+//     await user.save();
+
+//     res.json({ message: "Logged out successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error, please try again later" });
+//   }
+// };
+
+// LOGOUT USER
 export const logoutUser = async (req, res) => {
   try {
-    // Frontend se refreshToken ya accessToken bhejna hoga
-    const token = req.headers.authorization?.split(" ")[1];
-
-    if (!token) {
-      return res.status(400).json({ message: "No token provided" });
-    }
-
-    // Agar aap refresh token use kar rahe ho toh DB se delete karo
     const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
+    if (!user) return res.status(400).json({ message: "User not found" });
 
-    // Refresh token ko null kar dena (invalidate)
     user.refreshToken = null;
     await user.save();
 
@@ -203,7 +257,7 @@ export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    if (!user) return res.status(400).json({ field: "email", message: "User not found" });
 
     const resetToken = crypto.randomBytes(20).toString("hex");
     user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
@@ -238,7 +292,9 @@ export const resetPassword = async (req, res) => {
 
     const { password } = req.body;
     if (!password || password.length < 6) {
-      return res.status(400).json({ message: "Password must be 6+ characters" });
+      return res
+        .status(400)
+        .json({ field: "password", message: "Password must be 6+ characters" });
     }
 
     const salt = await bcrypt.genSalt(10);

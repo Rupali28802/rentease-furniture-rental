@@ -172,7 +172,7 @@ const MobileNavbar = ({
             className="flex items-center gap-2 text-2xl font-bold cursor-pointer"
           >
             <FaCouch className="text-green-700" />
-            <div className="flex items-center gap-0">
+            <div className=" flex items-center gap-0">
               <span className="text-green-700 text-sm">Furni</span>
               <span className="text-red-500 text-sm">Rent</span>
             </div>
@@ -236,3 +236,5 @@ const MobileNavbar = ({
 };
 
 export default MobileNavbar;
+
+

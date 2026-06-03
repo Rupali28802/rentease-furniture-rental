@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
+      required:true,
       min: 18,
     },
     email: {
@@ -25,7 +26,8 @@ const userSchema = new mongoose.Schema(
     mobile: {
 
       
-      type: Number,
+      type: String,
+      required:true,
       match: /^[0-9]{10}$/,
     },
 
