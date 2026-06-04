@@ -23,16 +23,18 @@ const productSchema = new mongoose.Schema(
 
     pricePerMonth: { type: Number, required: true, min: 0 },
     deposit: { type: Number, required: true, min: 0 },
+    isNewArrival: { type: Boolean, default: false },
 
     tenureOptions: {
-  type: [Number],
-  validate: {
-    validator: function(values) {
-      const rules = CATEGORY_TENURE_RULES[this.category?.toUpperCase()];
-      return rules ? values.every(v => rules.includes(v)) : true;
+      type: [Number],
+      validate: {
+        validator: function (values) {
+          const rules = CATEGORY_TENURE_RULES[this.category?.toUpperCase()];
+          return rules ? values.every((v) => rules.includes(v)) : true;
+        },
+        message: (props) => `Invalid tenure option for category ${props.value}`,
+      },
     },
-    message: props => `Invalid tenure option for category ${props.value}`,
-  }},
     maxTenure: { type: Number, default: 12 },
     renewable: { type: Boolean, default: true },
 

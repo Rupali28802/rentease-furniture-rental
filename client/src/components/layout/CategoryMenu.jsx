@@ -120,7 +120,7 @@ export default function CategoryMenu() {
     .filter(Boolean);
 
   return (
-    <div className="mt-1 py-2">
+    <div className="hidden md:block mt-1 py-2">
       <div className="flex items-center gap-3 md:gap-4  px-4 overflow-x-auto tracking-wider">
         {/* Dropdown */}
         <div className="relative shrink-0">

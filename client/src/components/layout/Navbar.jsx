@@ -14,11 +14,11 @@ const Navbar = () => {
 
   const [mobileMenu, setMobileMenu] = useState(false);
 
-  const [darkMode, setDarkMode] = useState(false);
+
 
   const cartCount = 0;
 
-const wishlistCount = 0;
+  const wishlistCount = 0;
 
   const location = "Bangalore, 560001";
 
@@ -31,13 +31,10 @@ const wishlistCount = 0;
     "Storage",
     "Home Decor",
   ];
+ 
 
   useEffect(() => {
-    if (mobileMenu) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+   document.body.style.overflow = mobileMenu ? "hidden" : "auto";
   }, [mobileMenu]);
 
   return (
@@ -56,8 +53,7 @@ const wishlistCount = 0;
             cartCount={cartCount}
             wishlistCount={wishlistCount}
             location={location}
-            darkMode={darkMode}
-            setDarkMode={setDarkMode}
+            
           />
 
           <TabletNavbar
@@ -68,8 +64,7 @@ const wishlistCount = 0;
             location={location}
             mobileMenu={mobileMenu}
             setMobileMenu={setMobileMenu}
-            darkMode={darkMode}
-            setDarkMode={setDarkMode}
+           
           />
 
           <DesktopNavbar
@@ -77,8 +72,7 @@ const wishlistCount = 0;
             setSearch={setSearch}
             cartCount={cartCount}
             wishlistCount={wishlistCount}
-            darkMode={darkMode}
-            setDarkMode={setDarkMode}
+            
           />
 
           <CategoryMenu categories={categories} />
@@ -88,6 +82,7 @@ const wishlistCount = 0;
           mobileMenu={mobileMenu}
           setMobileMenu={setMobileMenu}
           categories={categories}
+         
         />
       </div>
     </>

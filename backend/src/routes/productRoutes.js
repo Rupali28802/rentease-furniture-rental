@@ -41,6 +41,9 @@ router.put(
   validateProduct,
 );
 
+router.get("/offers", getOffers);
+router.get("/new-arrivals", getNewArrivals);
+
 router.delete("/:id", protect, authorize("admin"), deleteProduct);
 
 export default router;
