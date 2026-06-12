@@ -41,20 +41,18 @@ const OfferBanner = () => {
             key={index}
             className="relative h-[180px] rounded-lg overflow-hidden bg-[#f5f5f5]"
           >
-          
             <img
               src={`http://localhost:5000${banner.image}`}
               alt={banner.title}
               className="absolute right-0 top-0 h-full w-[45%] object-cover"
             />
 
-           
             <div className="relative z-10 h-full flex flex-col justify-center px-6 max-w-[55%]">
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="mt-4 md:mt-0 text-lg md:text-2xl font-bold text-gray-900 pt-3 md:pt-0">
                 {banner.title}
               </h2>
 
-              <p className="text-gray-800 mt-2 font-medium">
+              <p className="text-gray-800 mt-2 text-sm tracking-wide font-extralight">
                 {banner.subtitle}
               </p>
 
