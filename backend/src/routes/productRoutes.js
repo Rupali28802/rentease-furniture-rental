@@ -17,7 +17,7 @@ const router = express.Router();
 
 router.get("/", getProducts);
 
-// 🔎 Get single product
+//  Get single product
 router.get("/:id", getProductById);
 
 
@@ -40,9 +40,6 @@ router.put(
   updateProduct,
   validateProduct,
 );
-
-router.get("/offers", getOffers);
-router.get("/new-arrivals", getNewArrivals);
 
 router.delete("/:id", protect, authorize("admin"), deleteProduct);
 

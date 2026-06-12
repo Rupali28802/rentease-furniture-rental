@@ -41,7 +41,7 @@ const Navbar = () => {
     <>
       <DesktopTopbar location={location} />
 
-      <div className="bg-white dark:bg-gray-900 sticky top-0 z-50 shadow-sm border-b dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-900 sticky top-0 z-50 shadow-sm  dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <MobileNavbar
             search={search}

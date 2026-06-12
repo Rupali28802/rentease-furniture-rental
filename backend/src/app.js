@@ -9,6 +9,7 @@ import couponRoutes from "./routes/couponRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js"
 import heroBannerRoutes from "./routes/heroBannerRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js"
+import promoBannerRoutes from "./routes/promoBannerRoutes.js"
 import path from "path"
 import { fileURLToPath } from "url";
 
@@ -28,6 +29,7 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/hero-banners", heroBannerRoutes);
 app.use("/api/categories",categoryRoutes)
+app.use("/api/promo-banners",promoBannerRoutes)
 app.use("/api/address",addressRoutes)
 app.use("/api/products", productRoutes);
 app.use("/api/cart",cartRoutes)

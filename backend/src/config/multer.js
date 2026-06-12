@@ -51,7 +51,10 @@ const storage = multer.diskStorage({
 
     if (req.baseUrl.includes("hero-banners")) {
       dir = "uploads/hero";
-    } else if (req.baseUrl.includes("products")) {
+    }else if(req.baseUrl.includes("promo-banners")){
+      dir = "uploads/promo"
+    }
+     else if (req.baseUrl.includes("products")) {
       dir = "uploads/product";
     } else if (req.baseUrl.includes("blogs")) {
       dir = "uploads/blog";
@@ -88,7 +91,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // ✅ 2MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
 export default upload;
