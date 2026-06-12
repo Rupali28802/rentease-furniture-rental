@@ -31,7 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/hero-banners", heroBannerRoutes);
 app.use("/api/categories",categoryRoutes)
 app.use("/api/promo-banners",promoBannerRoutes)
-app.use("api/features", featureRoutes);
+app.use("/api/features", featureRoutes);
 app.use("/api/address",addressRoutes)
 app.use("/api/products", productRoutes);
 app.use("/api/cart",cartRoutes)

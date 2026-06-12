@@ -1,10 +1,13 @@
-import express from "express";
-import { getFeature,createFeature } from "../controllers/featureController";
+import express, { Router } from "express";
+import { getFeature, createFeature, updateFeature, deleteFeature } from "../controllers/featureController.js";
+import { authorize, protect } from "../middleware/authMiddleware.js";
 
 
-const router = express.router()
+const router = express.Router();
 
-router.post("/",createFeature);
-router.get("/",getFeature);
-// router.post("/",createFeature);
-// router.post("/",createFeature);
+router.post("/",protect,authorize("admin") ,createFeature);
+router.put("/:id",protect,authorize("admin") ,updateFeature);
+router.get("/",getFeature)
+
+router.delete("/:id", protect, authorize("admin"), deleteFeature);
+export default router;
