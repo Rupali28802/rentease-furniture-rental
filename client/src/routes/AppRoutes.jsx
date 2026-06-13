@@ -8,6 +8,7 @@ import Register from "../pages/Register";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import Profile from "../pages/Profile";
+import ProductPage from "../pages/Products";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,8 @@ const AppRoutes = () => {
 
         {/* Fallback */}
         <Route path="*" element={<Login />} />
+        {/* PRoduct Routes*/}
+        <Route path="/products" element={<ProductPage />} />
       </Routes>
     </BrowserRouter>
   );
