@@ -1,5 +1,9 @@
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { FaCouch } from "react-icons/fa6";
+import Upi from "../../assets/Footer-Img/UPI.png"
+import Rupay from "../../assets/Footer-Img/Rupay.jpg"
+import MasterCard from "../../assets/Footer-Img/MasterCard.jpg"
+import Visa from "../../assets/Footer-Img/Visa.jpg"
 
 const Footer = () => {
   return (
@@ -74,18 +78,26 @@ const Footer = () => {
           </p>
 
           <div className="flex gap-3 mt-4 md:mt-0">
-            <span className="bg-white text-black px-2 py-1 rounded text-xs font-bold">
-              VISA
-            </span>
-            <span className="bg-white text-black px-2 py-1 rounded text-xs font-bold">
-              MasterCard
-            </span>
-            <span className="bg-white text-black px-2 py-1 rounded text-xs font-bold">
-              UPI
-            </span>
-            <span className="bg-white text-black px-2 py-1 rounded text-xs font-bold">
-              PayPal
-            </span>
+            <img
+              src={Visa}
+              alt="Visa-IMG"
+              className="h-8 bg-white p-1 rounded shadow w-10"
+            />
+            <img
+              src={MasterCard}
+              alt="MASTERCARD-IMG"
+              className="h-8 bg-white p-1 rounded shadow w-10"
+            />
+            <img
+              src={Upi}
+              alt="UPI-IMG"
+              className="h-8 bg-white p-1 rounded shadow w-10"
+            />
+            <img
+              src={Rupay}
+              alt="RUPAY-IMG"
+              className="h-8 bg-white p-1 rounded shadow w-10"
+            />
           </div>
         </div>
       </div>
