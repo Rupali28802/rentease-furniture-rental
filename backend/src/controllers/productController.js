@@ -47,7 +47,7 @@ export const getProducts = async (req, res) => {
       minPrice,
       maxPrice,
       page = 1,
-      limit = 10,
+      limit = 20,
       available,
     } = req.query;
 

@@ -5,6 +5,15 @@ import axios from "axios";
 const ProductContext = createContext();
 
 export const useProducts = () => useContext(ProductContext);
+const defaultFilters = {
+  category: "",
+  minPrice: "",
+  maxPrice: "",
+  tenure: "",
+  page: 1,
+  limit: 20,
+  sort: "popular",
+};
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
@@ -13,14 +22,9 @@ export const ProductProvider = ({ children }) => {
     page: 1,
     pages: 1,
   });
-  const [filters, setFilters] = useState({
-    category: "",
-    minPrice: "",
-    maxPrice: "",
-    tenure: "",
-    page: 1, 
-    limit: 10,
-  });
+  const [filters, setFilters] = useState(
+   defaultFilters
+  );
 
 //   useEffect(() => {
 //     const fetchProducts = async () => {
@@ -28,7 +32,7 @@ export const ProductProvider = ({ children }) => {
 //         const res = await axios.get("/products");
 //         console.log(res.data);
         
-//         // 👇 ensure array hai
+//         //  ensure array hai
 //         setProducts(
 //           Array.isArray(res.data) ? res.data : res.data.products || [],
 //         );
