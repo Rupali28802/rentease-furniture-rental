@@ -46,9 +46,11 @@ export const getProducts = async (req, res) => {
       category,
       minPrice,
       maxPrice,
+      tenure,
       page = 1,
       limit = 20,
       available,
+      sort="popular"
     } = req.query;
 
     page = Number(page);
@@ -73,17 +75,26 @@ export const getProducts = async (req, res) => {
       if (maxPrice) query.pricePerMonth.$lte = Number(maxPrice);
     }
 
+    // Tenure
+    if(tenure){
+      query.tenureOptions={$in:[Number(tenure)]};
+    }
     //  Availability filter
     if (available !== undefined) {
       query.isAvailable = available === "true";
     }
+    
+    let sortOption = {};
+    if(sort === "priceLow")sortOption={pricePerMonth:1};
+    else if(sort === "priceHigh") sortOption = {pricePerMonth:-1};
+    else sortOption = {createdAt: -1};
 
     const skip = (page - 1) * limit;
 
     const products = await Product.find(query)
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort(sortOption);
 
     const total = await Product.countDocuments(query);
 
