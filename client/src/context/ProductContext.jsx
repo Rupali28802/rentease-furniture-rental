@@ -68,7 +68,7 @@ useEffect(() => {
 
 
   return (
-    <ProductContext.Provider value={{ products,filters,setFilters,pagination ,loading}}>
+    <ProductContext.Provider value={{ products,filters,setFilters,pagination ,loading,defaultFilters}}>
       {children}
     </ProductContext.Provider>
   );
