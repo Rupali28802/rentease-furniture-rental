@@ -17,15 +17,13 @@ const defaultFilters = {
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const [filters,setFilters] = useState(defaultFilters)
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
     pages: 1,
   });
-  const [filters, setFilters] = useState(
-   defaultFilters
-  );
-
+ const [loading,setLoading] = useState(true);
 //   useEffect(() => {
 //     const fetchProducts = async () => {
 //       try {
@@ -46,6 +44,8 @@ export const ProductProvider = ({ children }) => {
 useEffect(() => {
   const fetchProducts = async () => {
     try {
+      setLoading(true)
+
       const res = await api.get("/products",{params:filters}); 
        console.log("API Response:", res.data);
       setProducts(res.data.products||[]);
@@ -59,6 +59,8 @@ useEffect(() => {
       
     } catch (err) {
       console.error("Error fetching products:", err);
+    }finally{
+      setLoading(false);
     }
   };
   fetchProducts();
@@ -66,7 +68,7 @@ useEffect(() => {
 
 
   return (
-    <ProductContext.Provider value={{ products,setFilters,pagination }}>
+    <ProductContext.Provider value={{ products,filters,setFilters,pagination ,loading}}>
       {children}
     </ProductContext.Provider>
   );
