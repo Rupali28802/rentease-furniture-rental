@@ -438,9 +438,13 @@ export default function ProductsPage() {
   };
 
   return (
+  
     <div className="flex min-h-screen bg-white">
+    
       {/* FILTERS */}
-      <aside className="w-[260px] border-r p-5">
+      <aside className="w-[260px] 
+      border-r   border-r-gray-300
+       p-5">
         <h2 className="font-semibold text-lg mb-5">Filters</h2>
 
         {/* CATEGORY */}
@@ -524,7 +528,7 @@ export default function ProductsPage() {
         </div>
 
         <button
-          className="mt-6 w-full bg-gray-900 text-white py-2 rounded-lg"
+          className="mt-6 w-full bg-green-700 text-black py-2 rounded-lg"
           onClick={() =>
             setFilters({
               category: "",
@@ -577,7 +581,7 @@ export default function ProductsPage() {
               {products.map((product) => (
                 <div
                   key={product._id}
-                  className="border rounded-xl overflow-hidden bg-white relative hover:shadow-lg transition"
+                  className=" shadow-xl rounded-xl overflow-hidden bg-white relative hover:shadow-lg transition"
                 >
                   {/* HEART */}
                   <button
