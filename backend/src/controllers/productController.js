@@ -38,6 +38,17 @@ export const createProduct = async (req, res) => {
   }
 };
 
+// export const getCategories = async (req, res) => {
+//   try {
+//     const categories = await Product.distinct("category");
+
+//     res.json(categories);
+//   } catch (error) {
+//     res.status(500).json({
+//       message: error.message,
+//     });
+//   }
+// };
 // GET ALL PRODUCTS (Search + Filter + Pagination)
 export const getProducts = async (req, res) => {
   try {
@@ -50,7 +61,7 @@ export const getProducts = async (req, res) => {
       page = 1,
       limit = 20,
       available,
-      sort="popular"
+      sort = "popular",
     } = req.query;
 
     page = Number(page);
@@ -63,9 +74,15 @@ export const getProducts = async (req, res) => {
       query.name = { $regex: search, $options: "i" };
     }
 
-    //  Category
+    // Category filter
     if (category) {
-      query.category = category;
+      // Agar comma separated string aayi ho to split kar lo
+      const categories = category.split(",");
+      if (categories.length > 1) {
+        query.category = { $in: categories };
+      } else {
+        query.category = categories[0]; // single slug
+      }
     }
 
     //  Price filter
@@ -76,18 +93,18 @@ export const getProducts = async (req, res) => {
     }
 
     // Tenure
-    if(tenure){
-      query.tenureOptions={$in:[Number(tenure)]};
+    if (tenure) {
+      query.tenureOptions = { $in: [Number(tenure)] };
     }
     //  Availability filter
     if (available !== undefined) {
       query.isAvailable = available === "true";
     }
-    
+
     let sortOption = {};
-    if(sort === "priceLow")sortOption={pricePerMonth:1};
-    else if(sort === "priceHigh") sortOption = {pricePerMonth:-1};
-    else sortOption = {createdAt: -1};
+    if (sort === "priceLow") sortOption = { pricePerMonth: 1 };
+    else if (sort === "priceHigh") sortOption = { pricePerMonth: -1 };
+    else sortOption = { createdAt: -1 };
 
     const skip = (page - 1) * limit;
 

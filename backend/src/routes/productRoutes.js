@@ -8,6 +8,7 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
+  
 } from "../controllers/productController.js";
 import { protect, authorize } from "../middleware/authMiddleware.js";
 const router = express.Router();
@@ -19,6 +20,7 @@ router.get("/", getProducts);
 
 //  Get single product
 router.get("/:id", getProductById);
+// router.get("/products-categories",getCategories)
 
 
 
