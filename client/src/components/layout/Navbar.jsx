@@ -75,7 +75,7 @@ const Navbar = () => {
             
           />
 
-          <CategoryMenu categories={categories} />
+          {/* <CategoryMenu categories={categories} /> */}
         </div>
 
         <MobileMenu
