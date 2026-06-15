@@ -149,7 +149,7 @@ const TabletNavbar = ({
         </h1> */}
         <h1
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-3xl font-bold cursor-pointer"
+          className="flex items-center gap-2 text-2xl ml-2 font-bold cursor-pointer"
         >
           <FaCouch className="text-green-700" />
           <span>
@@ -158,12 +158,12 @@ const TabletNavbar = ({
           </span>
         </h1>
 
-        <div className="flex flex-1 max-w-2xl">
+        <div className="flex flex-1 max-w-2xl ml-4">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search..."
-            className="w-full border px-4 py-2 rounded-l-xl"
+            className="w-[350px] border px-4 py-2 rounded-l-xl"
           />
           <button
             onClick={() => navigate(`/products?search=${search}`)}
@@ -183,7 +183,7 @@ const TabletNavbar = ({
           </div>
         </div>
       </div>
-      <div className="bg-white border-t border-b px-4 py-2 flex items-center gap-2">
+      <div className="bg-white px-4 py-2 flex items-center gap-2">
         <FaMapMarkerAlt className="text-red-500" /> Deliver to: {location}
       </div>
     </div>

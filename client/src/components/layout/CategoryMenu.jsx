@@ -36,7 +36,7 @@ export default function CategoryMenu() {
     .filter(Boolean);
 
   return (
-    <div className="mt-1 py-2 shadow-sm">
+    <div className=" hidden lg:block mt-1 py-2 shadow-sm">
       <div className="flex items-center gap-3 md:gap-4 px-4 tracking-wider relative">
         {/* Dropdown */}
         <div className="relative shrink-0">
