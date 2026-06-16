@@ -171,7 +171,7 @@ const ProductContext = createContext();
 export const useProducts = () => useContext(ProductContext);
 
 const defaultFilters = {
-  category: "",
+  category: [],
   minPrice: "",
   maxPrice: "",
   tenure: "",
@@ -236,6 +236,7 @@ useEffect(() => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
+      console.log("FILTERS:", filters);
       const res = await api.get("/products", { params: filters });
       console.log("Products Response:", res.data);
 
@@ -256,6 +257,7 @@ useEffect(() => {
   };
   fetchProducts();
 }, [filters]);
+
 
   return (
     <ProductContext.Provider

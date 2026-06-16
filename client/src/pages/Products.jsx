@@ -90,8 +90,11 @@ export default function ProductsPage() {
                     setFilters((prev) => ({
                       ...prev,
                       category: prev.category.filter((c) => c !== cat.slug),
+                      
                       page: 1,
                     }));
+                    console.log();
+                    
                   }
                 }}
               />
@@ -131,7 +134,7 @@ export default function ProductsPage() {
         <div>
           <h3 className="font-medium mb-3">Tenure (Months)</h3>
 
-          {[3, 6, 12, 24].map((month) => (
+          {[3, 6, 12].map((month) => (
             <label
               key={month}
               className="flex items-center gap-2 mb-2 text-sm cursor-pointer"
