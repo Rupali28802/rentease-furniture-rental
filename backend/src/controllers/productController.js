@@ -66,7 +66,7 @@ export const getProducts = async (req, res) => {
 
     page = Number(page);
     limit = Number(limit);
-
+console.log(req.query);
     let query = {};
 
     //  Search
@@ -75,14 +75,21 @@ export const getProducts = async (req, res) => {
     }
 
     // Category filter
-    if (category) {
-      // Agar comma separated string aayi ho to split kar lo
-      const categories = category.split(",");
-      if (categories.length > 1) {
-        query.category = { $in: categories };
-      } else {
-        query.category = categories[0]; // single slug
-      }
+    // if (category) {
+    //   // Agar comma separated string aayi ho to split kar lo
+    //   const categories = category.split(",");
+    //   if (categories.length > 1) {
+    //     query.category = { $in: categories };
+    //   } else {
+    //     query.category = categories[0]; // single slug
+    //   }
+    // }
+
+    if(category){
+      const categories = Array.isArray(category) ? category:category.split(",");
+      query.category={
+        $in:categories,
+      };
     }
 
     //  Price filter
