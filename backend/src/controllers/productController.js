@@ -38,18 +38,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// export const getCategories = async (req, res) => {
-//   try {
-//     const categories = await Product.distinct("category");
 
-//     res.json(categories);
-//   } catch (error) {
-//     res.status(500).json({
-//       message: error.message,
-//     });
-//   }
-// };
-// GET ALL PRODUCTS (Search + Filter + Pagination)
 export const getProducts = async (req, res) => {
   try {
     let {
@@ -74,16 +63,6 @@ console.log(req.query);
       query.name = { $regex: search, $options: "i" };
     }
 
-    // Category filter
-    // if (category) {
-    //   // Agar comma separated string aayi ho to split kar lo
-    //   const categories = category.split(",");
-    //   if (categories.length > 1) {
-    //     query.category = { $in: categories };
-    //   } else {
-    //     query.category = categories[0]; // single slug
-    //   }
-    // }
 
     if(category){
       const categories = Array.isArray(category) ? category:category.split(",");

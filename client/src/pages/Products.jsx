@@ -1,23 +1,20 @@
-
-
 import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useProducts } from "../context/ProductContext";
 
 export default function ProductsPage() {
-  const { products,categories, filters, setFilters,defaultFilters, pagination, loading } = useProducts();
+  const {
+    products,
+    categories,
+    filters,
+    setFilters,
+    defaultFilters,
+    pagination,
+    loading,
+  } = useProducts();
 
   const [liked, setLiked] = useState({});
   const [price, setPrice] = useState(filters.maxPrice || 5000);
-
-  // const categories = [
-  //   "Sofa",
-  //   "Beds",
-  //   "Dining",
-  //   "Appliances",
-  //   "Office Furniture",
-  //   "TV & Entertainment",
-  // ];
 
   const toggleLike = (id) => {
     setLiked((prev) => ({
@@ -26,10 +23,10 @@ export default function ProductsPage() {
     }));
   };
 
-  const resetFilters = ()=>{
+  const resetFilters = () => {
     setPrice(5000);
     setFilters(defaultFilters);
-  }
+  };
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -41,36 +38,8 @@ export default function ProductsPage() {
       >
         <h2 className="font-semibold text-lg mb-5">Filters</h2>
 
-        {/* CATEGORY */}
-        {/* <div className="mb-6">
-          <h3 className="font-medium mb-3">Category</h3>
-
-          {categories.map((cat) => (
-            <label
-              key={cat._id}
-              className="flex items-center gap-2 mb-2 text-sm cursor-pointer"
-            >
-              <input
-                type="radio"
-                name="category"
-                checked={filters.category === cat.slug}
-                onChange={() =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    category: cat.slug,
-                    page: 1,
-                  }))
-                }
-              />
-
-              {cat.name}
-            </label>
-          ))}
-        </div> */}
-        {/* CATEGORY FILTER (Multi Select) */}
         <div className="mb-6">
           <h3 className="font-medium mb-3">Category</h3>
-
           {categories.map((cat) => (
             <label
               key={cat._id}
@@ -90,11 +59,8 @@ export default function ProductsPage() {
                     setFilters((prev) => ({
                       ...prev,
                       category: prev.category.filter((c) => c !== cat.slug),
-                      
                       page: 1,
                     }));
-                    console.log();
-                    
                   }
                 }}
               />
