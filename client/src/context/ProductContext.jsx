@@ -47,26 +47,7 @@ export const ProductProvider = ({ children }) => {
   
 useEffect(() => {
   const fetchProducts = async () => {
-    // try {
-    //   setLoading(true);
-    //   console.log("FILTERS:", filters);
-    //   const res = await api.get("/products", { params: filters });
-    //   console.log("Products Response:", res.data);
-
-    //   // ✅ Handle nested response
-    //   const data = res.data.data || res.data;
-
-    //   setProducts(Array.isArray(data.products) ? data.products : []);
-    //   setPagination({
-    //     total: data.total || 0,
-    //     page: data.page || 1,
-    //     pages: data.pages || 1,
-    //   });
-    // } catch (err) {
-    //   console.error("Error fetching products:", err);
-    // } finally {
-    //   setLoading(false);
-    // }
+   
 
     try {
       setLoading(true);
