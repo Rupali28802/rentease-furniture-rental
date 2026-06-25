@@ -1,4 +1,4 @@
-import React,{createContext, useEffect, useState} from "react";
+import React,{createContext,useContext, useEffect, useState} from "react";
 import { api } from "../api/axios";
 
 
@@ -12,7 +12,7 @@ export const WishlistProvider = ({children})=>{
         const fetchWishlist = async()=>{
             try {
                 const res = await api.get("/wishlist");
-                setWishlist(res.send.data.item || [])
+                setWishlist(res.data.item || [])
             } catch (error) {
                 console.log("Error fetching wishlist:",error);
                 
@@ -27,7 +27,7 @@ export const WishlistProvider = ({children})=>{
             const res= await api.post("/wishlist/toggle",{productId});
             setWishlist(res.data.items || []);
         } catch (error) {
-            console.log("wishlist toggle error:",err);
+            console.log("wishlist toggle error:",error);
             
         }
     };

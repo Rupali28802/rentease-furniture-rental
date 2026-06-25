@@ -14,15 +14,16 @@ export default function ProductsPage() {
     loading,
   } = useProducts();
 
-  const [liked, setLiked] = useState({});
+  // const [liked, setLiked] = useState({});
+  const {wishlist,toggleWishlist} = useWishlist();
   const [price, setPrice] = useState(filters.maxPrice || 5000);
 
-  const toggleLike = (id) => {
-    setLiked((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
+  // const toggleLike = (id) => {
+  //   setLiked((prev) => ({
+  //     ...prev,
+  //     [id]: !prev[id],
+  //   }));
+  // };
 
   const resetFilters = () => {
     setPrice(5000);
@@ -165,20 +166,21 @@ export default function ProductsPage() {
         ) : (
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {products.map((product) => (
-                <div
+              {products.map((product) => {
+                const isLiked = wishlist.some((item)=>item.product._id ===product._id);
+              
+              return  (
+              <div
                   key={product._id}
                   className=" shadow-xl rounded-xl overflow-hidden bg-white relative hover:shadow-lg transition"
                 >
                   {/* HEART */}
                   <button
-                    onClick={() => toggleLike(product._id)}
+                    onClick={() => toggleWishlist(product._id)}
                     className="absolute  right-3  p-2 "
                   >
                     <FaHeart
-                      className={`${
-                        liked[product._id] ? "text-red-500" : "text-gray-500"
-                      }`}
+                     className={`${isLiked ? "text-red-600":"text-gray-500"}`}
                     />
                   </button>
 
@@ -205,8 +207,8 @@ export default function ProductsPage() {
                       + Deposit ₹{product.deposit}
                     </p>
                   </div>
-                </div>
-              ))}
+                </div>)
+})}
             </div>
 
             {/* PAGINATION */}
