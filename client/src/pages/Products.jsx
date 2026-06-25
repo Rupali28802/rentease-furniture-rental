@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
+import { useWishlist } from "../context/WishlistContext";
 import { useProducts } from "../context/ProductContext";
 
 export default function ProductsPage() {
@@ -122,22 +123,7 @@ export default function ProductsPage() {
           ))}
         </div>
 
-        {/* <button
-          className="mt-6 w-full bg-green-700 text-black py-2 rounded-lg"
-          onClick={() =>
-            setFilters({
-              category: "",
-              minPrice: "",
-              maxPrice: "",
-              tenure: "",
-              page: 1,
-              limit: 20,
-              sort: "popular",
-            })
-          }
-        >
-          Reset Filters
-        </button> */}
+     
         <button
           className="mt-6 w-full bg-green-700 text-black py-2 rounded-lg"
           onClick={resetFilters}
