@@ -3,7 +3,7 @@ import Wishlist from "../models/Wishlist.js";
 //  Add product to wishlist
 export const addToWishlist = async (req, res) => {
   try {
-    const userId = req.user._id; // assume auth middleware sets req.user
+    const userId = req.user._id; 
     const { productId } = req.body;
 
     let wishlist = await Wishlist.findOne({ user: userId });
@@ -23,9 +23,9 @@ export const addToWishlist = async (req, res) => {
     }
 
     await wishlist.save();
-    res.json(wishlist);
+    res.json({items:wishlist.items});
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -37,8 +37,41 @@ export const getWishlist = async (req, res) => {
       "items.product",
     );
     res.json(wishlist || { items: [] });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// toogle wishlist
+
+export const toggleWishlist = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { productId } = req.body;
+
+    let wishlist = await Wishlist.findOne({ user: userId });
+
+    if (!wishlist) {
+      wishlist = new Wishlist({
+        user: userId,
+        items: [{ product: productId }],
+      });
+    } else {
+      const index = wishlist.items.findIndex(
+        (item) => item.product.toString() === productId,
+      );
+
+      if (index > -1) {
+        wishlist.items.splice(index, 1); 
+      } else {
+        wishlist.items.push({ product: productId }); 
+      }
+    }
+
+    await wishlist.save();
+    res.json({ items: wishlist.items });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -63,3 +96,4 @@ export const deleteFromWishlist = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
