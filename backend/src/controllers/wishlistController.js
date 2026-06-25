@@ -23,8 +23,9 @@ export const addToWishlist = async (req, res) => {
     }
 
     await wishlist.save();
-    res.json({items:wishlist.items});
-  } catch (err) {
+    const populated = await wishlist.populate("items.product")
+    res.json({items:populated.items});
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
@@ -34,15 +35,16 @@ export const getWishlist = async (req, res) => {
   try {
     const userId = req.user._id;
     const wishlist = await Wishlist.findOne({ user: userId }).populate(
-      "items.product",
+      "items.product"
+     
     );
-    res.json(wishlist || { items: [] });
+    res.json(wishlist? {items:wishlist.items}:{items:[]});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// toogle wishlist
+// toogle wishlist {ADD/REMOVE}
 
 export const toggleWishlist = async (req, res) => {
   try {
@@ -69,7 +71,8 @@ export const toggleWishlist = async (req, res) => {
     }
 
     await wishlist.save();
-    res.json({ items: wishlist.items });
+    const populated = await wishlist.populate("items.product")
+    res.json({ items:populated.items });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -91,9 +94,10 @@ export const deleteFromWishlist = async (req, res) => {
     );
 
     await wishlist.save();
-    res.json({ message: "Product removed from wishlist", wishlist });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const populated = await wishlist.populate("items.product")
+    res.json({items:populated.items});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
