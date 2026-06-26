@@ -5,13 +5,13 @@ import {
   deleteFromWishlist,
   toggleWishlist
 } from "../controllers/wishlistController.js";
-import { authMiddleware } from "../middleware/auth.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/wishlist/add", authMiddleware, addToWishlist);
-router.get("/", authMiddleware, getWishlist);
-router.get("/toggle",authMiddleware,toggleWishlist)
-router.delete("/wishlist/delete", authMiddleware, deleteFromWishlist);
+router.post("/add",protect, addToWishlist);
+router.get("/", protect, getWishlist);
+router.get("/toggle",protect,toggleWishlist)
+router.delete("/delete", protect, deleteFromWishlist);
 
 export default router;
