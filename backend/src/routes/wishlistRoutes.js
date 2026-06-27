@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/add",protect, addToWishlist);
 router.get("/", protect, getWishlist);
-router.get("/toggle",protect,toggleWishlist)
+router.post("/toggle",protect,toggleWishlist)
 router.delete("/delete", protect, deleteFromWishlist);
 
 export default router;
