@@ -49,6 +49,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import Profile from "../pages/Profile";
 import ProductPage from "../pages/Products";
+import WishlistPage from "../pages/Wishlist";
 
 const AppRoutes = () => {
   return (
@@ -58,7 +59,7 @@ const AppRoutes = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductPage />} />
-          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
 
           {/* aur bhi pages yahan add kar sakte ho */}
         </Route>

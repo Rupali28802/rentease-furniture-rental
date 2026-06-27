@@ -1,22 +1,25 @@
 // src/components/home/ProductSection.jsx
 import { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import { api } from "../../api/axios";
 import { FaHeart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function ProductSection() {
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/products?limit=6")
+    api
+      .get("/products?limit=6")
       .then((res) => setProducts(res.data.products))
       .catch((err) => console.error(err));
 
     // fetch wishlist
-    axios
-      .get("http://localhost:5000/api/wishlist")
-      .then((res) => setWishlist(res.data.items.map((i) => i.product)))
+  api
+      .get("/wishlist")
+      .then((res) => setWishlist(res.data.items.map((i) => i.product._id)))
       .catch((err) => console.error(err));
   }, []);
 
@@ -24,13 +27,13 @@ function ProductSection() {
     try {
       if (wishlist.includes(productId)) {
         // remove from wishlist
-        await axios.delete("http://localhost:5000/api/wishlist/delete", {
+        await api.delete("/wishlist/delete", {
           data: { productId },
         });
         setWishlist(wishlist.filter((id) => id !== productId));
       } else {
         // add to wishlist
-        await axios.post("http://localhost:5000/api/wishlist/add", {
+        await api.post("/wishlist/add", {
           productId,
         });
         setWishlist([...wishlist, productId]);
@@ -45,7 +48,7 @@ function ProductSection() {
       {/* Heading + View All */}
       <div className="flex justify-between items-center mb-6 ">
         <h2 className="text-2xl font-bold text-black">Top Picks for You</h2>
-        <button className="text-green-600 font-medium hover:underline">
+        <button onClick={()=>navigate("/products")} className="text-green-600 font-medium hover:underline">
           View All
         </button>
       </div>

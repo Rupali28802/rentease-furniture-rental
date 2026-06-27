@@ -10,6 +10,8 @@ export const WishlistProvider = ({ children }) => {
     const fetchWishlist = async () => {
       try {
         const res = await api.get("/wishlist");
+        console.log("Wishlist API Response:",res.data);
+        
         setWishlist(res.data.items || []);
       } catch (error) {
         console.log("Error fetching wishlist:", error);

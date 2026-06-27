@@ -11,7 +11,7 @@ const WishlistPage = () => {
           wishlist.map((item) => (
             <div
               key={item.product._id}
-              className="bg-white shadow rounded-lg p-4"
+              className="bg-white shadow rounded-lg p-4 relative"
             >
               <img
                 src={item.product.image}
@@ -31,7 +31,7 @@ const WishlistPage = () => {
               {/* Toggle button */}
               <button
                 onClick={() => toggleWishlist(item.product._id)}
-                className="absolute top-2 right-2 text-res-500 hover:text-red-700"
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
               >
                 ❤️
               </button>
