@@ -58,7 +58,8 @@ const AppRoutes = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductPage />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+
           {/* aur bhi pages yahan add kar sakte ho */}
         </Route>
 
@@ -67,7 +68,7 @@ const AppRoutes = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset/:token" element={<ResetPassword />} />
-
+        <Route path="/profile" element={<Profile />} />
         {/* Fallback */}
         <Route path="*" element={<Login />} />
       </Routes>
