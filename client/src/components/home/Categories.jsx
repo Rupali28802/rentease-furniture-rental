@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "../../api/axios";
 import { Link } from "react-router-dom";
 
 export default function ShopByCategory() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/categories")
+   api
+      .get("/categories")
       .then((res) => setCategories(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -22,7 +22,7 @@ export default function ShopByCategory() {
     "home-decore",
   ];
   const filteredCategories = categories.filter((cat) =>
-    allowedSlugs.includes(cat.slug),
+    allowedSlugs.includes(cat.slug.toLowerCase()),
   );
 
   return (
@@ -31,12 +31,12 @@ export default function ShopByCategory() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold tracking-wide">Shop by Category</h2>
-          <a
-            href="/categories"
+          <Link
+            to="/categories"
             className="text-green-600 font-medium hover:underline"
           >
             View All
-          </a>
+          </Link>
         </div>
 
         {/* Category Grid */}
@@ -44,7 +44,7 @@ export default function ShopByCategory() {
           {filteredCategories.map((cat) => (
             <Link
               key={cat._id}
-              href={`/products?category=${cat.slug}`}
+              to={`/products?category=${cat.slug}`}
               className="flex flex-col items-center justify-center p-4 bg-white shadow rounded hover:shadow-lg transition"
             >
               {/* ✅ If you want to use images from backend */}

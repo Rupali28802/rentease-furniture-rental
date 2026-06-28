@@ -12,9 +12,11 @@ export const AuthProvider = ({ children }) => {
 
  useEffect(() => {
    const storedUser = localStorage.getItem("user");
+   const storedToken = localStorage.getItem("token");
    if (storedUser && storedUser !== "undefined") {
      try {
        setUser(JSON.parse(storedUser));
+       setToken(storedToken);
      } catch (err) {
        console.error("Invalid user JSON:", err);
        localStorage.removeItem("user"); // clear corrupt data
@@ -33,6 +35,9 @@ localStorage.setItem("user",JSON.stringify(res.data.user))
       localStorage.setItem("token", res.data.token);
 
       return res.data;
+      console.log(data);
+      console.log(res.data.token);
+      
     } catch (error) {
       throw (
         error.response?.data || {
