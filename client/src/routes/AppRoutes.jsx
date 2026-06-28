@@ -58,7 +58,7 @@ const AppRoutes = () => {
         {/* Layout wrapper: Navbar + Footer */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/products" element={<ProductPage />} />
+          <Route path="/category/:slug" element={<ProductPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
 
           {/* aur bhi pages yahan add kar sakte ho */}

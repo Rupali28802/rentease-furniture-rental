@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function ShopByCategory() {
   const [categories, setCategories] = useState([]);
@@ -41,9 +42,9 @@ export default function ShopByCategory() {
         {/* Category Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
           {filteredCategories.map((cat) => (
-            <a
+            <Link
               key={cat._id}
-              href={`/category/${cat.slug}`}
+              href={`/products?category=${cat.slug}`}
               className="flex flex-col items-center justify-center p-4 bg-white shadow rounded hover:shadow-lg transition"
             >
               {/* ✅ If you want to use images from backend */}
@@ -55,7 +56,7 @@ export default function ShopByCategory() {
                 />
               )}
               <span className="text-gray-800 font-medium">{cat.name}</span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

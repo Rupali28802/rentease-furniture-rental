@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useWishlist } from "../context/WishlistContext";
 import { useProducts } from "../context/ProductContext";
+import { useLocation } from "react-router-dom";
 
 export default function ProductsPage() {
+  const {search} = useLocation();
+  const params = new URLSearchParams(search);
+  const initialCategory = params.get("category");
   const {
     products,
     categories,
@@ -24,6 +28,16 @@ export default function ProductsPage() {
   //     [id]: !prev[id],
   //   }));
   // };
+
+  useEffect(()=>{
+    if(initialCategory){
+      setFilters((prev)=>({
+        ...prev,
+        category:[initialCategory],
+        page:1,
+      }))
+    }
+  },[initialCategory,setFilters])
 
   const resetFilters = () => {
     setPrice(5000);
@@ -136,7 +150,7 @@ export default function ProductsPage() {
       {/* PRODUCTS */}
       <main className="flex-1 p-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="font-semibold text-xl">All Products</h1>
+          <h1 className="font-semibold text-xl">{filters.category?.length>0?`${filters.category.join(",")}products`:"All Products"}</h1>
 
           <div className="flex items-center gap-4 mt-2">
             <h3 className="mt-1 font-medium">Sort By</h3>
