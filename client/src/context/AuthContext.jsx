@@ -103,13 +103,7 @@ localStorage.setItem("user",JSON.stringify(res.data.user));
   const logout = async () => {
     try {
       await api.post(
-        "/auth/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        "/auth/logout"
       );
   localStorage.removeItem("token");
   localStorage.removeItem("user");

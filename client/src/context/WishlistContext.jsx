@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { api } from "../api/axios";
+import { api } from "../api/axios"; 
 const WishlistContext = createContext();
 export const useWishlist = () => useContext(WishlistContext);
 
@@ -9,9 +9,7 @@ export const WishlistProvider = ({ children }) => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        const res = await api.get("/wishlist");
-        console.log("Wishlist API Response:",res.data);
-        
+        const res = await api.get("/wishlist"); 
         setWishlist(res.data.items || []);
       } catch (error) {
         console.log("Error fetching wishlist:", error);
@@ -39,7 +37,6 @@ export const WishlistProvider = ({ children }) => {
     } catch (error) {
       console.log("Wishlist toggle error:", error);
     }
-    
   };
 
   return (

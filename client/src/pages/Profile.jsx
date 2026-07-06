@@ -82,9 +82,15 @@ const Profile = () => {
       {user && (
         <div className="mt-8">
           <button
-            onClick={() => {
-              logout();
-              navigate("/");
+            onClick={async() => {
+              try {
+                await logout();
+                 navigate("/login");
+              } catch (error) {
+                console.log("Logout error:",error.message);
+                
+              }
+             
             }}
             className="flex items-center gap-4 p-5 rounded-xl border hover:bg-red-50 dark:hover:bg-red-900 dark:border-gray-700 transition text-red-600 dark:text-red-400"
           >
