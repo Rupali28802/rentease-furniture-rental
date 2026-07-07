@@ -53,7 +53,8 @@ import ResetPassword from "../pages/ResetPassword";
 import Profile from "../pages/Profile";
 import ProductPage from "../pages/Products";
 import WishlistPage from "../pages/Wishlist";
-import {ProtectedRoute} from "../routes/ProtectedRoute"
+import {ProtectedRoute} from "../routes/ProtectedRoute";
+import ProductDetails from "../pages/ProductDetails";
 
 const AppRoutes = () => {
   return (
@@ -67,6 +68,14 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute>
                 <ProductPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/products/:id"
+            element={
+              <ProtectedRoute>
+                <ProductDetails />
               </ProtectedRoute>
             }
           />

@@ -58,6 +58,7 @@ function ProductSection() {
         {products.map((p) => (
           <div
             key={p._id}
+            onClick={()=>navigate(`/products/${p._id}`)}
             className="group p-4 rounded-xl shadow text-black transition flex flex-col relative"
           >
             {/* Wishlist Icon */}
@@ -66,7 +67,7 @@ function ProductSection() {
               className={`absolute top-3 right-3 transition ${
                 wishlist.includes(p._id)
                   ? "text-red-500"
-                  : "text-gray-400 hover:text-red-500"
+                  : "text-gray-400"
               }`}
             >
               <FaHeart />
