@@ -4,5 +4,7 @@ import { Children } from "react";
 
 export const ProtectedRoute=({children})=>{
     const {token} = useAuth();
-    return token ? children:<Navigate to="/login"/>;
+     console.log("ProtectedRoute token:", token);
+    return token ? children:<Navigate to="/login" replace/>;
 }
+
