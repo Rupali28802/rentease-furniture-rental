@@ -12,6 +12,7 @@ import ProductPage from "../pages/Products";
 import WishlistPage from "../pages/Wishlist";
 import {ProtectedRoute} from "../routes/ProtectedRoute"
 import ProductDetailsPage from "../pages/ProductDetails";
+import Cart from "../pages/Cart";
 
 
 const AppRoutes = () => {
@@ -54,6 +55,15 @@ const AppRoutes = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+               <Cart/>
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/profile"
             element={

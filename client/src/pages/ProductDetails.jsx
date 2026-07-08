@@ -49,14 +49,29 @@ export default function ProductDetailsPage() {
     (item) => item.product && item.product._id === product._id,
   );
 
-  const handleAddToCart = (productId)=>{
+  const handleAddToCart = async(productId)=>{
+   try {
+     await api.post("/cart",{productId,qty:1});
     console.log("Add to Cart:",productId);
+    navigate("/cart")
 
+   } catch (error) {
+    console.error("Error adding to cart:",error);
     
-  }
+   }
+    
+  };
 
-  const handleRentNow = (productId)=>{
+  const handleRentNow =async (productId)=>{
+   try {
+     await api.post("/rent",{productId,tenure:selectedTenure})
     console.log("Rent Now:",productId);
+    navigate("/checkout")
+
+   } catch (error) {
+    console.error("Error adding to cart:",error);
+    
+   }
     
   }
   return (
@@ -133,11 +148,18 @@ export default function ProductDetailsPage() {
           </div>
 
           {/* Buttons */}
+          {/* Buttons */}
           <div className="flex gap-4 mt-6">
-            <button onClick={handleAddToCart(product._id)} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+            <button
+              onClick={() => handleAddToCart(product._id)}
+              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+            >
               Add to Cart
             </button>
-            <button onClick={handleRentNow(product._id)} className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            <button
+              onClick={() => handleRentNow(product._id)}
+              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+            >
               Rent Now
             </button>
           </div>
@@ -159,7 +181,7 @@ export default function ProductDetailsPage() {
       </div>
 
       {/* Reviews + Rating */}
-    
+
       <div className="mt-10">
         <h3 className="text-xl font-semibold mb-4">
           Customer Reviews (Average ★ {product.averageRating})
@@ -217,12 +239,16 @@ export default function ProductDetailsPage() {
 
               {/* Buttons */}
               <div className="flex gap-2 mt-3">
-                <button 
-                onClick={()=>handleAddToCart(rp._id)}
-                 className="flex-1 bg-green-600 text-white text-xs py-1 rounded hover:bg-green-700">
+                <button
+                  onClick={() => handleAddToCart(rp._id)}
+                  className="flex-1 bg-green-600 text-white text-xs py-1 rounded hover:bg-green-700"
+                >
                   Add to Cart
                 </button>
-                <button onClick={handleRentNow(rp._id)} className="flex-1 bg-blue-600 text-white text-xs py-1 rounded hover:bg-blue-700">
+                <button
+                  onClick={handleRentNow(rp._id)}
+                  className="flex-1 bg-blue-600 text-white text-xs py-1 rounded hover:bg-blue-700"
+                >
                   Rent Now
                 </button>
               </div>
