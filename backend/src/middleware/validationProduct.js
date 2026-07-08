@@ -18,7 +18,7 @@ export const validateProduct = (req, res, next) => {
     }
   };
 
-  // 🔴 Required fields
+  // Required fields
   if (!name || !category || !pricePerMonth || !deposit) {
     deleteImage();
     return res.status(400).json({
@@ -26,7 +26,7 @@ export const validateProduct = (req, res, next) => {
     });
   }
 
-  // 🔴 Category validation (against slugs)
+  //  Category validation (against slugs)
   const allowedCategories = CATEGORY_LIST.map((c) => c.slug);
   if (!allowedCategories.includes(category)) {
     deleteImage();
@@ -35,7 +35,7 @@ export const validateProduct = (req, res, next) => {
     });
   }
 
-  // 🔴 Number validation
+  //  Number validation
   if (isNaN(pricePerMonth) || pricePerMonth <= 0) {
     deleteImage();
     return res.status(400).json({
@@ -50,7 +50,7 @@ export const validateProduct = (req, res, next) => {
     });
   }
 
-  // 🔴 Tenure validation
+  //  Tenure validation
   if (tenureOptions) {
     const parsed = Array.isArray(tenureOptions)
       ? tenureOptions
@@ -66,7 +66,7 @@ export const validateProduct = (req, res, next) => {
       });
     }
 
-    // ✅ Optional: Dynamic tenure validation per category
+    //  Optional: Dynamic tenure validation per category
     const categoryKey = category.toUpperCase().replace("-", "_");
     const rules = CATEGORY_TENURE_RULES[categoryKey];
     if (rules && !parsed.every((t) => rules.includes(Number(t)))) {
@@ -77,7 +77,7 @@ export const validateProduct = (req, res, next) => {
     }
   }
 
-  // 🔴 Stock validation
+  //  Stock validation
   if (stock !== undefined && (isNaN(stock) || stock < 0)) {
     deleteImage();
     return res.status(400).json({
