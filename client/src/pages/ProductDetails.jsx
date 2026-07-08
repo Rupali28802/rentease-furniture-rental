@@ -6,6 +6,7 @@ import { FaHeart } from "react-icons/fa";
 import { useWishlist } from "../context/WishlistContext"; 
 import ReviewForm from "../components/Review/ReviewForm";
 import ReviewCard from "../components/Review/ReviewCard";
+import ReviewPopup from "../components/Review/ReviewPopup";
 
 
 export default function ProductDetailsPage() {
@@ -16,6 +17,7 @@ export default function ProductDetailsPage() {
   const [mainImage, setMainImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedTenure, setSelectedTenure] = useState(null);
+  const [showPopup,setShowPopup] = useState(false);
 
   const { wishlist, toggleWishlist } = useWishlist(); 
 
@@ -30,9 +32,14 @@ export default function ProductDetailsPage() {
        });
       //  Related products based on category
       api
-        .get(`/products?category=${prod.category}&limit=4`)
+        .get(`/products?category=${prod.category}&limit=20`)
         .then((res) => setRelatedProducts(res.data.products || []));
+
+         if (prod?.isPurchased) {
+           setShowPopup(true);
+         }
     });
+     
   }, [id]);
 
   if (!product) return <p className="p-6">Loading...</p>;
@@ -42,6 +49,16 @@ export default function ProductDetailsPage() {
     (item) => item.product && item.product._id === product._id,
   );
 
+  const handleAddToCart = (productId)=>{
+    console.log("Add to Cart:",productId);
+
+    
+  }
+
+  const handleRentNow = (productId)=>{
+    console.log("Rent Now:",productId);
+    
+  }
   return (
     <div className="px-6 py-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -117,10 +134,10 @@ export default function ProductDetailsPage() {
 
           {/* Buttons */}
           <div className="flex gap-4 mt-6">
-            <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+            <button onClick={handleAddToCart(product._id)} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
               Add to Cart
             </button>
-            <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            <button onClick={handleRentNow(product._id)} className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
               Rent Now
             </button>
           </div>
@@ -142,7 +159,7 @@ export default function ProductDetailsPage() {
       </div>
 
       {/* Reviews + Rating */}
-      {/* Reviews + Rating */}
+    
       <div className="mt-10">
         <h3 className="text-xl font-semibold mb-4">
           Customer Reviews (Average ★ {product.averageRating})
@@ -200,10 +217,12 @@ export default function ProductDetailsPage() {
 
               {/* Buttons */}
               <div className="flex gap-2 mt-3">
-                <button className="flex-1 bg-green-600 text-white text-xs py-1 rounded hover:bg-green-700">
+                <button 
+                onClick={()=>handleAddToCart(rp._id)}
+                 className="flex-1 bg-green-600 text-white text-xs py-1 rounded hover:bg-green-700">
                   Add to Cart
                 </button>
-                <button className="flex-1 bg-blue-600 text-white text-xs py-1 rounded hover:bg-blue-700">
+                <button onClick={handleRentNow(rp._id)} className="flex-1 bg-blue-600 text-white text-xs py-1 rounded hover:bg-blue-700">
                   Rent Now
                 </button>
               </div>
@@ -214,3 +233,6 @@ export default function ProductDetailsPage() {
     </div>
   );
 }
+
+
+
