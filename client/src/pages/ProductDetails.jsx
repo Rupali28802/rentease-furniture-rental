@@ -17,6 +17,7 @@ export default function ProductDetailsPage() {
   const [mainImage, setMainImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedTenure, setSelectedTenure] = useState(null);
+  const [deliveryDate,setDeliveryDate] = useState("")
   const [showPopup,setShowPopup] = useState(false);
 
   const { wishlist, toggleWishlist } = useWishlist(); 
@@ -49,18 +50,29 @@ export default function ProductDetailsPage() {
     (item) => item.product && item.product._id === product._id,
   );
 
-  const handleAddToCart = async(productId)=>{
-   try {
-     await api.post("/cart",{productId,qty:1});
-    console.log("Add to Cart:",productId);
-    navigate("/cart")
+ const handleAddToCart = async (productId) => {
+  try {
+    if (!selectedTenure || !deliveryDate) {
+      alert("Please select tenure and delivery date before adding to cart");
+      return;
+    }
 
-   } catch (error) {
-    console.error("Error adding to cart:",error);
-    
-   }
-    
-  };
+    const payload = {
+      productId,
+      quantity: 1,
+      tenure: selectedTenure,
+      deliveryDate
+    };
+
+    const res = await api.post("/cart", payload);
+    console.log("Added to Cart:", res.data);
+
+    navigate("/cart");
+  } catch (error) {
+    console.error("Error adding to cart:", error.response?.data || error.message);
+  }
+};
+
 
   const handleRentNow =async (productId)=>{
    try {
@@ -85,6 +97,7 @@ export default function ProductDetailsPage() {
             </span>
           )}
           <img
+
             src={mainImage}
             alt={product.name}
             className="w-full h-[400px] object-contain rounded shadow"
@@ -212,7 +225,7 @@ export default function ProductDetailsPage() {
           rp?._id ? (
             <div
               key={rp._id}
-              className="p-4 rounded shadow hover:shadow-lg bg-white"
+              className="p-4 rounded shadow hover:shadow-lg bg-white relative"
             >
               <img
                 src={rp.image}
@@ -221,6 +234,15 @@ export default function ProductDetailsPage() {
                 onClick={() => navigate(`/product/${rp._id}`)}
               />
               <h4 className="text-sm font-medium">{rp.name}</h4>
+
+              <button
+              onClick={()=>toggleWishlist(rp)}
+              className={`absolute top-2 right-3 p-1 rounded-full ${
+                wishlist.some(item=>item._id === rp._id)?"text-red-500"
+                :"text-gray-400"}`
+              }>
+                <FaHeart size={16}/>
+              </button>
               <p className="text-xs text-gray-600">₹{rp.pricePerMonth}/month</p>
               <p className="text-xs text-gray-600">Deposit: ₹{rp.deposit}</p>
               <p className="text-xs text-yellow-500">★ {rp.averageRating}</p>
