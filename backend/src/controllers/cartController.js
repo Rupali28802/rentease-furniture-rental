@@ -52,7 +52,7 @@ export const addToCart = async (req, res) => {
       });
     }
     //  delivery date validation
-    if (new Date(deliveryDate) < new Date()) {
+    if (deliveryDate && new Date(deliveryDate) < new Date()) {
       return res.status(400).json({
         message: "Delivery date must be in the future",
       });
@@ -73,7 +73,7 @@ export const addToCart = async (req, res) => {
     if (cartItem) {
       cartItem.quantity = quantity;
       cartItem.tenure = Number(tenure);
-      cartItem.deliveryDate = deliveryDate;
+      cartItem.deliveryDate = deliveryDate || cartItem.deliveryDate;
       cartItem.totalRent = totalRent;
       cartItem.deposit = deposit;
 
