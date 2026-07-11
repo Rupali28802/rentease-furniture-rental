@@ -8,21 +8,21 @@ export const addToCart = async (req, res) => {
   try {
     const { productId, quantity = 1, tenure, deliveryDate } = req.body;
 
-    // ✅ validation
-    if (!productId || !tenure || !deliveryDate) {
+    //  validation
+    if (!productId || !tenure ) {
       return res.status(400).json({
-        message: "productId, tenure, deliveryDate required",
+        message: "productId and tenure required",
       });
     }
 
-    // ✅ ObjectId validation
+    //  ObjectId validation
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res.status(400).json({
         message: "Invalid Product ID",
       });
     }
 
-    // ✅ find product
+    //  find product
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -31,45 +31,45 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // ✅ stock validation
+    //  stock validation
     if (product.stock < quantity) {
       return res.status(400).json({
         message: "Insufficient stock available",
       });
     }
 
-    // ✅ availability validation
+    //  availability validation
     if (!product.isAvailable) {
       return res.status(400).json({
         message: "Product currently unavailable",
       });
     }
 
-    // ✅ tenure validation
+    //  tenure validation
     if (!product.tenureOptions.includes(Number(tenure))) {
       return res.status(400).json({
         message: `Invalid tenure. Allowed: ${product.tenureOptions}`,
       });
     }
-    // ✅ delivery date validation
+    //  delivery date validation
     if (new Date(deliveryDate) < new Date()) {
       return res.status(400).json({
         message: "Delivery date must be in the future",
       });
     }
 
-    // ✅ calculations
+    //  calculations
     const totalRent = product.pricePerMonth * Number(tenure) * Number(quantity);
 
     const deposit = product.deposit;
 
-    // ✅ check existing cart item
+    //  check existing cart item
     let cartItem = await Cart.findOne({
       user: req.user._id,
       product: productId,
     });
 
-    // ✅ UPDATE EXISTING CART ITEM
+    //  UPDATE EXISTING CART ITEM
     if (cartItem) {
       cartItem.quantity = quantity;
       cartItem.tenure = Number(tenure);
@@ -79,7 +79,7 @@ export const addToCart = async (req, res) => {
 
       await cartItem.save();
 
-      // 🔔 notification
+      //  notification
       await Notification.create({
         user: req.user._id,
         title: "Cart Updated 🛒",
@@ -93,7 +93,7 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // ✅ CREATE NEW CART ITEM
+    //  CREATE NEW CART ITEM
     cartItem = await Cart.create({
       user: req.user._id,
       product: productId,
@@ -104,7 +104,7 @@ export const addToCart = async (req, res) => {
       deposit,
     });
 
-    // 🔔 notification
+    //  notification
     await Notification.create({
       user: req.user._id,
       title: "Added to Cart 🛒",
@@ -123,7 +123,7 @@ export const addToCart = async (req, res) => {
   }
 };
 
-// ✅ GET CART
+//  GET CART
 export const getCart = async (req, res) => {
   try {
     const cart = await Cart.find({
@@ -150,7 +150,7 @@ export const getCart = async (req, res) => {
   }
 };
 
-// ✅ UPDATE CART ITEM
+//  UPDATE CART ITEM
 export const updateCart = async (req, res) => {
   try {
     const { quantity, tenure, deliveryDate } = req.body;
@@ -163,7 +163,7 @@ export const updateCart = async (req, res) => {
       });
     }
 
-    // ✅ quantity update
+    //  quantity update
     if (quantity) {
       if (cartItem.product.stock < quantity) {
         return res.status(400).json({
@@ -173,8 +173,7 @@ export const updateCart = async (req, res) => {
 
       cartItem.quantity = quantity;
     }
-
-    // ✅ tenure update
+    //  tenure update
     if (tenure) {
       const newTenure = Number(tenure);
 
@@ -187,12 +186,12 @@ export const updateCart = async (req, res) => {
       cartItem.tenure = newTenure;
     }
 
-    // ✅ delivery date update
+    //  delivery date update
     if (deliveryDate) {
       cartItem.deliveryDate = deliveryDate;
     }
 
-    // ✅ recalculate totals
+    //  recalculate totals
     cartItem.totalRent =
       cartItem.product.pricePerMonth * cartItem.tenure * cartItem.quantity;
 
@@ -200,7 +199,7 @@ export const updateCart = async (req, res) => {
 
     await cartItem.save();
 
-    // 🔔 notification
+    //  notification
     await Notification.create({
       user: req.user._id,
       title: "Cart Updated ✏️",
@@ -219,7 +218,7 @@ export const updateCart = async (req, res) => {
   }
 };
 
-// ✅ REMOVE ITEM FROM CART
+//  REMOVE ITEM FROM CART
 export const removeFromCart = async (req, res) => {
   try {
     const cartItem = await Cart.findById(req.params.id).populate("product");
@@ -234,10 +233,10 @@ export const removeFromCart = async (req, res) => {
 
     await cartItem.deleteOne();
 
-    // 🔔 notification
+    //  notification
     await Notification.create({
       user: req.user._id,
-      title: "Removed from Cart ❌",
+      title: "Removed from Cart ",
       message: `${productName} removed from cart`,
       type: "SYSTEM",
     });
@@ -252,17 +251,17 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
-// ✅ CLEAR CART
+//  CLEAR CART
 export const clearCart = async (req, res) => {
   try {
     await Cart.deleteMany({
       user: req.user._id,
     });
 
-    // 🔔 notification
+    //  notification
     await Notification.create({
       user: req.user._id,
-      title: "Cart Cleared 🧹",
+      title: "Cart Cleared ",
       message: "All items removed from cart",
       type: "SYSTEM",
     });
