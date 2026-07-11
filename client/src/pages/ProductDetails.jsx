@@ -236,7 +236,7 @@ export default function ProductDetailsPage() {
               <h4 className="text-sm font-medium">{rp.name}</h4>
 
               <button
-              onClick={()=>toggleWishlist(rp)}
+              onClick={()=>toggleWishlist(rp._id)}
               className={`absolute top-2 right-3 p-1 rounded-full ${
                 wishlist.some(item=>item._id === rp._id)?"text-red-500"
                 :"text-gray-400"}`
