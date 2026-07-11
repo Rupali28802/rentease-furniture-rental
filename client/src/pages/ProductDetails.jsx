@@ -17,7 +17,7 @@ export default function ProductDetailsPage() {
   const [mainImage, setMainImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedTenure, setSelectedTenure] = useState(null);
-  const [deliveryDate,setDeliveryDate] = useState("")
+//   const [deliveryDate,setDeliveryDate] = useState("")
   const [showPopup,setShowPopup] = useState(false);
 
   const { wishlist, toggleWishlist } = useWishlist(); 
@@ -52,8 +52,8 @@ export default function ProductDetailsPage() {
 
  const handleAddToCart = async (productId) => {
   try {
-    if (!selectedTenure || !deliveryDate) {
-      alert("Please select tenure and delivery date before adding to cart");
+    if (!selectedTenure ) {
+      alert("Please select tenure before adding to cart");
       return;
     }
 
@@ -61,7 +61,7 @@ export default function ProductDetailsPage() {
       productId,
       quantity: 1,
       tenure: selectedTenure,
-      deliveryDate
+    //   deliveryDate
     };
 
     const res = await api.post("/cart", payload);
