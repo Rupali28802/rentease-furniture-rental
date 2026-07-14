@@ -46,9 +46,7 @@ export default function ProductDetailsPage() {
   if (!product) return <p className="p-6">Loading...</p>;
 
   //  check liked status from context
-  const isLiked = wishlist.some(
-    (item) => item.product && item.product._id === product._id,
-  );
+  const isLiked = wishlist.includes(product._id);
 
  const handleAddToCart = async (productId) => {
   try {
@@ -221,35 +219,35 @@ export default function ProductDetailsPage() {
 
       {/* Related Products */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {relatedProducts.map((rp) =>
-          rp?._id ? (
+        {relatedProducts.map((product) =>
+          product?._id ? (
             <div
-              key={rp._id}
+              key={product._id}
               className="p-4 rounded shadow hover:shadow-lg bg-white relative"
             >
               <img
-                src={rp.image}
-                alt={rp.name}
+                src={product.image}
+                alt={product.name}
                 className="w-full h-32 object-contain mb-2 cursor-pointer"
-                onClick={() => navigate(`/product/${rp._id}`)}
+                onClick={() => navigate(`/product/${product._id}`)}
               />
-              <h4 className="text-sm font-medium">{rp.name}</h4>
+              <h4 className="text-sm font-medium">{product.name}</h4>
 
               <button
-              onClick={()=>toggleWishlist(rp._id)}
+              onClick={()=>toggleWishlist(product._id)}
               className={`absolute top-2 right-3 p-1 rounded-full ${
-                wishlist.some(item=>item._id === rp._id)?"text-red-500"
+                wishlist.some(item=>item._id === product._id)?"text-red-500"
                 :"text-gray-400"}`
               }>
                 <FaHeart size={16}/>
               </button>
-              <p className="text-xs text-gray-600">₹{rp.pricePerMonth}/month</p>
-              <p className="text-xs text-gray-600">Deposit: ₹{rp.deposit}</p>
-              <p className="text-xs text-yellow-500">★ {rp.averageRating}</p>
+              <p className="text-xs text-gray-600">₹{product.pricePerMonth}/month</p>
+              <p className="text-xs text-gray-600">Deposit: ₹{product.deposit}</p>
+              <p className="text-xs text-yellow-500">★ {product.averageRating}</p>
 
               {/* Tenure Options */}
               <div className="flex gap-2 mt-2 flex-wrap">
-                {rp.tenureOptions?.map((t, idx) => (
+                {product.tenureOptions?.map((t, idx) => (
                   <span
                     key={idx}
                     className="px-2 py-1 border rounded text-xs bg-gray-100"
@@ -262,13 +260,13 @@ export default function ProductDetailsPage() {
               {/* Buttons */}
               <div className="flex gap-2 mt-3">
                 <button
-                  onClick={() => handleAddToCart(rp._id)}
+                  onClick={() => handleAddToCart(product._id)}
                   className="flex-1 bg-green-600 text-white text-xs py-1 rounded hover:bg-green-700"
                 >
                   Add to Cart
                 </button>
                 <button
-                  onClick={handleRentNow(rp._id)}
+                  onClick={()=>handleRentNow(product._id)}
                   className="flex-1 bg-blue-600 text-white text-xs py-1 rounded hover:bg-blue-700"
                 >
                   Rent Now
