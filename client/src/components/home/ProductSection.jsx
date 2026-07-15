@@ -26,7 +26,7 @@ function ProductSection() {
         <button
           type="button"
           onClick={() => navigate("/products")}
-          className="text-green-600 font-medium hover:underline"
+          className="text-green-600 font-medium hover:underline cursor-pointer"
         >
           View All
         </button>
@@ -51,7 +51,7 @@ function ProductSection() {
                   e.stopPropagation();
                   toggleWishlist(p._id);
                 }}
-                className={`absolute top-3 right-3 transition ${
+                className={`absolute top-3 right-3 transition cursor-pointer ${
                   isLiked ? "text-red-500" : "text-gray-400"
                 }`}
               >
