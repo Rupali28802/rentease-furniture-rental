@@ -170,9 +170,7 @@ export default function ProductsPage() {
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {products.map((product) => {
-                const isLiked = wishlist.some(
-                  (item) => item.product && item.product._id === product._id,
-                );
+                const isLiked = wishlist.includes( product._id);
                 return (
                   <div
                     key={product._id}

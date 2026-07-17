@@ -158,17 +158,20 @@ export default function ProductDetailsPage() {
           </div>
 
           {/* Buttons */}
-          {/* Buttons */}
           <div className="flex gap-4 mt-6">
             <button
               onClick={() => handleAddToCart(product._id)}
-              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+              // className="bg-green-600 text-white px-6 py-2 rounded cursor-pointer hover:border-green-600 hover:text-black hover:bg-white"
+              className="bg-green-600 text-white px-6 py-2 rounded cursor-pointer 
+             border border-transparent 
+             hover:border-green-600 hover:text-black hover:bg-white 
+             transition duration-300 ease-in-out"
             >
               Add to Cart
             </button>
             <button
               onClick={() => handleRentNow(product._id)}
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+              className="border border-green-600 text-black px-6 py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
             >
               Rent Now
             </button>
@@ -249,7 +252,7 @@ export default function ProductDetailsPage() {
                 {product.tenureOptions?.map((t, idx) => (
                   <span
                     key={idx}
-                    className="px-2 py-1 border rounded text-xs bg-gray-100"
+                    className="px-2 py-1 border rounded text-xs bg-gray-100 cursor-pointer"
                   >
                     {t}m
                   </span>
@@ -259,14 +262,18 @@ export default function ProductDetailsPage() {
               {/* Buttons */}
               <div className="flex gap-2 mt-3">
                 <button
-                  onClick={() => handleAddToCart(rp._id)}
-                  className="flex-1 bg-green-600 text-white text-xs py-1 rounded hover:bg-green-700"
+                  onClick={() => handleAddToCart(product._id)}
+                  // className="bg-green-600 text-white px-6 py-2 rounded cursor-pointer hover:border-green-600 hover:text-black hover:bg-white"
+                  className="bg-green-600 text-white text-xs px-6 py-2 rounded cursor-pointer 
+             border border-transparent 
+             hover:border-green-600 hover:text-black hover:bg-white 
+             transition duration-300 ease-in-out"
                 >
                   Add to Cart
                 </button>
                 <button
-                  onClick={() => handleRentNow(rp._id)}
-                  className="flex-1 bg-blue-600 text-white text-xs py-1 rounded hover:bg-blue-700"
+                  onClick={() => handleRentNow(product._id)}
+                  className="border border-green-600 text-xs text-black px-6 py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
                 >
                   Rent Now
                 </button>

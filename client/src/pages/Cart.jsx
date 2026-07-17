@@ -1,34 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import axios from "axios";
-import { api } from '../api/axios';
+import React from 'react'
+import { useCart } from '../context/CartContext';
+
 
 
 const Cart = () => {
-    const[cartItems,setCartItems] = useState([]);
+    const {cartItems,removeFromCart,updateCart,clearCart} = useCart();
 
-    useEffect(()=>{
-api.get("/cart")
-.then(res=>setCartItems(res.data.items || res.data||[]))
-.catch(error=>console.error(error));
-    },[])
-
-    const handleRemove = async(id)=>{
-        await api.delete(`/cart/${id}`);
-        setCartItems(cartItems.filter(item=>item._id !== id));
-    }
-
-    const handleQtyChange = async(id,qty)=>{
-       await api.put(`/cart/${id}`, { qty });
-
-        setCartItems(cartItems.map(item=>
-            item._id === id ? {...item,qty}:item
-        ));
-    };
-
-    const total = Array.isArray(cartItems)
-      ? cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
-      : 0;
-
+   const grandTotal = cartItems.reduce(
+    (acc,item)=>acc+item.totalRent+item.deposit,0
+   )
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -43,8 +23,11 @@ api.get("/cart")
               className="flex items-center justify-between bg-white p-4 rounded shadow"
             >
               <div>
-                <h2 className="text-lg font-semibold">{item.name}</h2>
-                <p className="text-gray-600">₹{item.price}</p>
+                <h2 className="text-lg font-semibold">{item.product.name}</h2>
+                <p className="text-gray-600">₹{item.product.price}</p>
+                <p className="text-xs text-gray-500">
+                  Deposit: ₹{item.deposit}
+                </p>
               </div>
               <div className="flex items-center space-x-4">
                 <input
@@ -67,7 +50,9 @@ api.get("/cart")
           ))}
           <div className="mt-6 text-right">
             <h2 className="text-xl font-bold">Total:₹{total}</h2>
-            <button className='mt-4 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700'>Checkout</button>
+            <button className="mt-4 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+              Checkout
+            </button>
           </div>
         </div>
       )}
