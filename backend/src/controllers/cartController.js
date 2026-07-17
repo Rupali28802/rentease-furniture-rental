@@ -3,7 +3,7 @@ import Product from "../models/Product.js";
 import Notification from "../models/Notification.js";
 import mongoose from "mongoose";
 
-// ✅ ADD / UPDATE CART
+//  ADD / UPDATE CART
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity = 1, tenure, deliveryDate } = req.body;
@@ -82,7 +82,7 @@ export const addToCart = async (req, res) => {
       //  notification
       await Notification.create({
         user: req.user._id,
-        title: "Cart Updated 🛒",
+        title: "Cart Updated ",
         message: `${product.name} updated in cart`,
         type: "SYSTEM",
       });
@@ -99,7 +99,7 @@ export const addToCart = async (req, res) => {
       product: productId,
       quantity,
       tenure: Number(tenure),
-      deliveryDate,
+      deliveryDate:deliveryDate||new Date(),
       totalRent,
       deposit,
     });
@@ -107,7 +107,7 @@ export const addToCart = async (req, res) => {
     //  notification
     await Notification.create({
       user: req.user._id,
-      title: "Added to Cart 🛒",
+      title: "Added to Cart ",
       message: `${product.name} added to cart`,
       type: "SYSTEM",
     });
