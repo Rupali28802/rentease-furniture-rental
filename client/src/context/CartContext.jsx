@@ -12,15 +12,15 @@ export const CartProvider = ({ children }) => {
     .catch(err=>console.error(err));
   },[]);
 
-  const addToCart = async(ProductProvider,tenure,deliveryDate)=>{
+  const addToCart = async(productId,tenure,deliveryDate)=>{
     const res = await api.post("/cart",{productId,tenure,deliveryDate});
     setCartItems(prev=>[...prev,res.data.cartItem]);
   };
 
-  const removerFromCart = async(id)=>{
-    await api.delete(`/cart/${id}`,{quantity});
+  const removeFromCart = async(id)=>{
+    await api.delete(`/cart/${id}`);
     setCartItems(prev=>
-        prev.map(items=>items._id === id?res.data.cartItem:items)
+        prev.filter(item=>item._id !== id)
     );
 
   };
@@ -28,17 +28,17 @@ export const CartProvider = ({ children }) => {
   const updateCart = async (id,quantity)=>{
     const res = await api.put(`/cart/${id}`, { quantity });
     setCartItems(prev=>
-        prev.map(item=>(item._id === id?res.data.cartItem:items))
+        prev.map(item=>(item._id === id?res.data.cartItem:item))
     )
   }
 
   const clearCart = async()=>{
-    await api.delete("/cart/clear")
+    await api.delete("/cart")
     setCartItems([]);
   }
 
   return(
-    <CartContext.Provider value={{cartItems,addToCart,removerFromCart,updateCart,clearCart}}>
+    <CartContext.Provider value={{cartItems,addToCart,removeFromCart,updateCart,clearCart}}>
         {children}
     </CartContext.Provider>
   )
