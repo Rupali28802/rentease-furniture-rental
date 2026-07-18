@@ -7,7 +7,7 @@ const Cart = () => {
     const {cartItems,removeFromCart,updateCart,clearCart} = useCart();
 
     const monthlyRent = cartItems.reduce((acc,item)=>acc+item.totalRent,0);
-    const deposit = cartItems.reduce((acc,item)=>acc+item.deposite,0)
+    const deposit = cartItems.reduce((acc,item)=>acc+item.deposit,0)
     const grandTotal = monthlyRent + deposit
 
 
@@ -40,7 +40,7 @@ const Cart = () => {
                       Delivery:{new Date(item.deliveryDate).toLocaleDateString()}
                     </p>
                     <p className="text-xs text-gray-500">
-                      Deposite:₹{item.deposit}
+                      Deposit:₹{item.deposit}
                     </p>
                   </div>
                   {/* Quantity + Remove */}

@@ -9,8 +9,11 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     api.get("/cart")
     .then(res=>setCartItems(res.data.items || []))
+
+    
     .catch(err=>console.error(err));
   },[]);
+  
 
   const addToCart = async(productId,tenure,deliveryDate)=>{
     const res = await api.post("/cart",{productId,tenure,deliveryDate});
