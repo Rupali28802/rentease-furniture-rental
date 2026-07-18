@@ -61,7 +61,7 @@ export const addToCart = async (req, res) => {
     //  calculations
     const totalRent = product.pricePerMonth * Number(tenure) * Number(quantity);
 
-    const deposit = product.deposit;
+    const deposit = product.deposit * quantity;
 
     //  check existing cart item
     let cartItem = await Cart.findOne({
@@ -99,7 +99,7 @@ export const addToCart = async (req, res) => {
       product: productId,
       quantity,
       tenure: Number(tenure),
-      deliveryDate:deliveryDate||new Date(),
+      deliveryDate:deliveryDate||new Date(Date.now()+3*24*60*60*1000),
       totalRent,
       deposit,
     });
@@ -133,14 +133,15 @@ export const getCart = async (req, res) => {
       select: "name image category pricePerMonth deposit stock isAvailable",
     });
 
-    const grandTotal = cart.reduce(
-      (acc, item) => acc + item.totalRent + item.deposit,
-      0,
-    );
+    const monthlyRent = cart.reduce((acc, item) => acc + item.totalRent ,0);
+    const deposit = cart.reduce((acc,item)=>acc+item.deposit,0);
+    const grandTotal = monthlyRent + deposit;
 
     return res.json({
       items: cart,
       totalItems: cart.length,
+      monthlyRent,
+      deposit,
       grandTotal,
     });
   } catch (error) {
