@@ -11,7 +11,8 @@ import reviewRoutes from "./routes/reviewRoutes.js"
 import heroBannerRoutes from "./routes/heroBannerRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js"
 import promoBannerRoutes from "./routes/promoBannerRoutes.js";
-import featureRoutes from "./routes/featureRoutes.js"
+import featureRoutes from "./routes/featureRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js"
 import path from "path"
 import { fileURLToPath } from "url";
 
@@ -38,6 +39,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/wishlist",wishlistRoutes)
 app.use("/api/cart",cartRoutes)
 app.use("/api/orders", orderRoutes);
+app.use("/api/payment",paymentRoutes)
 app.use("api/coupons",cartRoutes);
 app.use("/api/reviews", reviewRoutes);
 export default app;
