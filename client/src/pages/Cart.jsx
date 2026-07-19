@@ -1,53 +1,57 @@
-import React from 'react'
-import { useCart } from '../context/CartContext';
-
-
+import React from "react";
+import { useCart } from "../context/CartContext";
 
 const Cart = () => {
-    const {cartItems,removeFromCart,updateCart,clearCart} = useCart();
+  const { cartItems, removeFromCart, updateCart, clearCart } = useCart();
 
-    const monthlyRent = cartItems.reduce((acc,item)=>acc+item.totalRent,0);
-    const deposit = cartItems.reduce((acc,item)=>acc+item.deposit,0)
-    const grandTotal = monthlyRent + deposit
-
+  const monthlyRent = cartItems.reduce((acc, item) => acc + item.totalRent, 0);
+  const deposit = cartItems.reduce((acc, item) => acc + item.deposit, 0);
+  const grandTotal = monthlyRent + deposit;
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold ">My Cart({cartItems.length})</h1>
+        <h1 className="text-3xl font-bold">My Cart ({cartItems.length})</h1>
         {cartItems.length > 0 && (
           <button
             onClick={clearCart}
-            className=" text-green-700 px-4 py-2 rounded hover:underline"
+            className="text-green-700 px-4 py-2 rounded hover:underline"
           >
             Remove All
           </button>
         )}
-        
       </div>
 
       {cartItems.length === 0 ? (
         <p className="text-gray-600">Cart is empty</p>
       ) : (
-        // <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="space-y-2">
-            <div className=" space-y-4">
-              {cartItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="flex items-center justify-between bg-white p-4 rounded shadow"
-                >
-                  <img
-                    src={item.product.image}
-                    alt={item.product.image}
-                    className="w-24 h-24 object-cover rounded mr-4"
-                  />
-                  <div className="flex-1 ml-5">
+        <div className="grid grid-cols-1 md:grid-cols-10 gap-6">
+          {/* Products Section (70%) */}
+          <div className="md:col-span-7 space-y-4">
+            {cartItems.map((item) => (
+              <div
+                key={item._id}
+                className="flex flex-col md:flex-row items-start md:items-center bg-white p-4 rounded shadow"
+              >
+                {/* Image */}
+                <img
+                  src={item.product.image}
+                  alt={item.product.name}
+                  className="w-24 h-24 object-cover rounded mb-4 md:mb-0 md:mr-4"
+                />
+
+                {/* Details */}
+                <div className="flex-1 flex flex-col">
+                  <div className="mb-4 ">
                     <h2 className="text-lg font-semibold">
                       {item.product.name}
                     </h2>
                     <p className="text-gray-600">
                       ₹{item.product.pricePerMonth}/month
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Deposit: ₹{item.deposit}
                     </p>
                     <p className="text-xs text-gray-500">
                       Tenure: {item.tenure} months
@@ -56,12 +60,10 @@ const Cart = () => {
                       Delivery:{" "}
                       {new Date(item.deliveryDate).toLocaleDateString()}
                     </p>
-                    <p className="text-xs text-gray-500">
-                      Deposit: ₹{item.deposit}
-                    </p>
                   </div>
+
                   {/* Quantity + Remove */}
-                  <div className="flex items-center space-x-4">
+                  <div className="flex flex-row items-center space-x-4 md:ml-auto">
                     <div className="flex items-center border border-gray-300 rounded">
                       <button
                         onClick={() =>
@@ -78,7 +80,7 @@ const Cart = () => {
                         onChange={(e) =>
                           updateCart(item._id, parseInt(e.target.value))
                         }
-                        className="w-10 pl-3 text-center border- border-"
+                        className="w-12 text-center border-l border-r"
                       />
                       <button
                         onClick={() => updateCart(item._id, item.quantity + 1)}
@@ -89,18 +91,19 @@ const Cart = () => {
                     </div>
                     <button
                       onClick={() => removeFromCart(item._id)}
-                      className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+                      className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
                     >
                       Remove
                     </button>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
 
-            {/* Right Cart Summer */}
-            <div className="flex justify-end">
-            <div className="bg-white p-6 rounded shadow-md">
+          {/* Cart Summary (30% Sticky) */}
+          <div className="md:col-span-3">
+            <div className="bg-white p-6 rounded shadow-md md:sticky md:top-6 h-fit">
               <h2 className="text-xl font-semibold mb-4">Cart Summary</h2>
               <div className="space-y-2 text-gray-700">
                 <p>Monthly Rent: ₹{monthlyRent}</p>
@@ -117,12 +120,11 @@ const Cart = () => {
                 Proceed to Checkout
               </button>
             </div>
-            </div>
           </div>
-        // </div>
+        </div>
       )}
     </div>
   );
-}
+};
 
-export default Cart
+export default Cart;
