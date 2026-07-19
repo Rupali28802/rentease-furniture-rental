@@ -137,7 +137,7 @@ Your order ${order._id} has been placed successfully.`,
 
  
 
-// ✅ Get User Orders
+//  Get User Orders
 export const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id }).populate("items.product");
@@ -147,7 +147,24 @@ export const getOrders = async (req, res) => {
   }
 };
 
-// ✅ Update Order Status
+// Get Single Order
+export const getOrderById = async(req,res)=>{
+  try {
+    const order = await order.findById(req.params.id).populate("items.product user");
+    if(!order) return res.status(404).json({message:"order not found"})
+
+      if(order.user._id.toString() !=req.user._id.toString() && !req.user.isAdmin){
+        return res.status(403).json({message:"Not authorized"});
+
+      }
+
+      res.json(order);
+  } catch (error) {
+    res.status(500).json({message:error.message});
+  }
+} 
+
+//  Update Order Status
 export const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
