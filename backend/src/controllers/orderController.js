@@ -218,3 +218,31 @@ export const  cancleOrder = async(req,res)=>{
     res.status(500).json({message:error.message})
   }
 }
+
+export const refoundOrder = async(req,res)=>{
+  try {
+    const {refoundAmount} = req.body;
+    const order = await Order.findeById(req.params.id);
+
+    if(!order) return res.status(404).json({message:"Order not found"});
+
+    if(!req.user.isAdmin){
+      return res.status(403).json({message:"Not authorized"});
+
+      order.paymentStatus="refounded";
+      order.refounAmount = refoundAmount;
+      order.activityLog.push({
+        action: `Refound processed :₹&{refoundAmount}`,
+        updatedBy:req.user._id,
+
+      });
+
+      await order.save();
+
+    }
+    
+    res.json({message:"Refound processed successfully",order});
+  } catch (error) {
+    res.status(500).json({message:error.message})
+  }
+};
