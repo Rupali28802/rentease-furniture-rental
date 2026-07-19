@@ -5,6 +5,8 @@ import Coupon from "../models/Coupon.js";
 import Notification from "../models/Notification.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import Razorpay from "razorpay";
+import crypto from "crypto";
+
 
 export const placeOrder = async (req, res) => {
   try {
@@ -191,3 +193,28 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
+
+export const  cancleOrder = async(req,res)=>{
+  try {
+    const order = await Order.findById(req.params.id);
+    if(!order) return res.status(404).json({message:"Order not found"});
+
+    if(order.user.toString() !==req.user._id.toString() && !req.user.isAdmin){
+      return res.status(403).json({message:"Not authorized"});
+
+    }
+
+    if(["confirmed","shipped","delivered"].includes(order.status)){
+      return res.status(400).json({message:"Cannot cancel after confirmation/shipping"});
+
+    }
+    order.status = "cancelled";
+    order.activityLog.push({action:"Order cancelled",updatedBy:req.user._id});
+    await order.save();
+
+    res.json({message:"Order cancelled successfully",order});
+
+  } catch (error) {
+    res.status(500).json({message:error.message})
+  }
+}

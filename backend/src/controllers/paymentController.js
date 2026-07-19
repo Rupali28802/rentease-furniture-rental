@@ -1,98 +1,4 @@
-// import crypto from "crypto";
-// import Order from "../models/Order.js";
-// import Cart from "../models/Cart.js";
-// import Notification from "../models/Notification.js";
-// import { sendEmail } from "../utils/sendEmail.js";
 
-// export const verifyPayment = async (req, res) => {
-//   try {
-//     const {
-//       razorpay_order_id,
-//       razorpay_payment_id,
-//       razorpay_signature,
-//       orderId,
-//       userId,
-//     } = req.body;
-//     //  FIND ORDER
-//     const order = await Order.findById(orderId).populate("user");
-
-//     if (!order) {
-//       return res.status(404).json({
-//         message: "Order not found",
-//       });
-//     }
-//     //  OWNERSHIP CHECK
-//     if (order.user._id.toString() !== userId) {
-//       return res.status(403).json({
-//         message: "Unauthorized",
-//       });
-//     }
-
-//     //  ALREADY PAID CHECK
-//     if (order.paymentStatus === "paid") {
-//       return res.status(400).json({
-//         message: "Payment already verified",
-//       });
-//     }
-//     const sign = razorpay_order_id + "|" + razorpay_payment_id;
-
-//     const expectedSign = crypto
-//       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-//       .update(sign.toString())
-//       .digest("hex");
-
-//     const order = await Order.findById(orderId);
-
-//     if (!order) {
-//       return res.status(404).json({ message: "Order not found" });
-//     }
-
-//     //  ownership check
-//     if (order.user.toString() !== userId) {
-//       return res.status(403).json({ message: "Unauthorized" });
-//     }
-
-//     if (razorpay_signature !== expectedSign) {
-//       await Notification.create({
-//         user: userId,
-//         title: "Payment Failed ",
-//         message: "Payment verification failed",
-//         type: "PAYMENT",
-//       });
-
-//       return res.status(400).json({
-//         message: "Invalid signature",
-//       });
-//     }
-
-//     //  update order
-//     order.status = "confirmed";
-//     order.paymentStatus = "paid";
-//     order.paymentId = razorpay_payment_id;
-//     order.razorpayOrderId = razorpay_order_id;
-
-//     await order.save();
-
-//     // notification
-//     await Notification.create({
-//       user: userId,
-//       title: "Payment Successful ",
-//       message: "Your payment has been verified",
-//       type: "PAYMENT",
-//     });
-
-//     //  clear cart
-//     await Cart.deleteMany({ user: userId });
-
-//     return res.status(200).json({
-//       message: "Payment verified successfully",
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: error.message,
-//     });
-//   }
-// };
 
 import crypto from "crypto";
 
@@ -160,7 +66,7 @@ export const verifyPayment = async (req, res) => {
         type: "PAYMENT",
       });
 
-      // 📧 EMAIL
+      //  EMAIL
       await sendEmail({
         to: order.user.email,
 
@@ -243,3 +149,7 @@ export const verifyPayment = async (req, res) => {
     });
   }
 };
+
+export const razorpayWebhook = async(req,res)=>{
+  
+}
