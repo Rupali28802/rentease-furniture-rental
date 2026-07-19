@@ -29,9 +29,9 @@ const Cart = () => {
       {cartItems.length === 0 ? (
         <p className="text-gray-600">Cart is empty</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-4">
+        // <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <div className=" space-y-4">
               {cartItems.map((item) => (
                 <div
                   key={item._id}
@@ -42,7 +42,7 @@ const Cart = () => {
                     alt={item.product.image}
                     className="w-24 h-24 object-cover rounded mr-4"
                   />
-                  <div className="flex-1">
+                  <div className="flex-1 ml-5">
                     <h2 className="text-lg font-semibold">
                       {item.product.name}
                     </h2>
@@ -99,6 +99,7 @@ const Cart = () => {
             </div>
 
             {/* Right Cart Summer */}
+            <div className="flex justify-end">
             <div className="bg-white p-6 rounded shadow-md">
               <h2 className="text-xl font-semibold mb-4">Cart Summary</h2>
               <div className="space-y-2 text-gray-700">
@@ -116,8 +117,9 @@ const Cart = () => {
                 Proceed to Checkout
               </button>
             </div>
+            </div>
           </div>
-        </div>
+        // </div>
       )}
     </div>
   );
