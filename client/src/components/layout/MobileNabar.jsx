@@ -1,5 +1,3 @@
-
-
 import { useNavigate } from "react-router-dom";
 import {
   FaBars,
@@ -46,10 +44,10 @@ const MobileNavbar = ({
             className="flex items-center gap-2 text-2xl font-bold cursor-pointer"
           >
             <FaCouch className="text-green-700" />
-            <div className=" flex items-center gap-0">
+            {/* <div className=" flex items-center gap-0">
               <span className="text-green-700 text-sm">Furni</span>
               <span className="text-red-500 text-sm">Rent</span>
-            </div>
+            </div> */}
           </h1>
         </div>
 
@@ -73,10 +71,12 @@ const MobileNavbar = ({
         {/* RIGHT ICONS */}
         <div className="flex items-center gap-4 dark:text-white">
           {/* WISHLIST */}
-          <div className="hidden relative cursor-pointer">
-            <FaHeart className="text-lg" />
+          <div onClick={()=>navigate("wishlist")} className="relative cursor-pointer">
+            <FaHeart className={`text-lg ${
+              wishlistCount >0 ?"text-red-500":"text-gray-500"
+            }` }/>
             {wishlistCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-3 -right-2 bg-green-700 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                 {wishlistCount}
               </span>
             )}
@@ -86,7 +86,7 @@ const MobileNavbar = ({
           <div className="relative cursor-pointer">
             <FaShoppingCart className="text-lg" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-3 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}

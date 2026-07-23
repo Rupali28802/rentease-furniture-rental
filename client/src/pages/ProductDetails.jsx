@@ -1,13 +1,11 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../api/axios";
 import { FaHeart } from "react-icons/fa";
-import { useWishlist } from "../context/WishlistContext"; 
+import { useWishlist } from "../context/WishlistContext";
 import ReviewForm from "../components/Review/ReviewForm";
 import ReviewCard from "../components/Review/ReviewCard";
 import ReviewPopup from "../components/Review/ReviewPopup";
-
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
@@ -17,10 +15,11 @@ export default function ProductDetailsPage() {
   const [mainImage, setMainImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedTenure, setSelectedTenure] = useState(null);
-//   const [deliveryDate,setDeliveryDate] = useState("")
-  const [showPopup,setShowPopup] = useState(false);
+  const [selectedTenureRelated,setSelectedTenureRelated] = useState({})
+  //   const [deliveryDate,setDeliveryDate] = useState("")
+  const [showPopup, setShowPopup] = useState(false);
 
-  const { wishlist, toggleWishlist } = useWishlist(); 
+  const { wishlist, toggleWishlist } = useWishlist();
 
   useEffect(() => {
     api.get(`/products/${id}`).then((res) => {
@@ -28,19 +27,18 @@ export default function ProductDetailsPage() {
       setProduct(prod);
       setMainImage(prod.image);
 
-       api.get(`/reviews/${id}`).then((res) => {
-         setProduct((prev) => ({ ...prev, reviews: res.data }));
-       });
+      api.get(`/reviews/${id}`).then((res) => {
+        setProduct((prev) => ({ ...prev, reviews: res.data }));
+      });
       //  Related products based on category
       api
         .get(`/products?category=${prod.category}&limit=20`)
         .then((res) => setRelatedProducts(res.data.products || []));
 
-         if (prod?.isPurchased) {
-           setShowPopup(true);
-         }
+      if (prod?.isPurchased) {
+        setShowPopup(true);
+      }
     });
-     
   }, [id]);
 
   if (!product) return <p className="p-6">Loading...</p>;
@@ -48,42 +46,41 @@ export default function ProductDetailsPage() {
   //  check liked status from context
   const isLiked = wishlist.includes(product._id);
 
- const handleAddToCart = async (productId) => {
-  try {
-    if (!selectedTenure ) {
-      alert("Please select tenure before adding to cart");
-      return;
+  const handleAddToCart = async (productId,tenure) => {
+    try {
+      if (!tenure) {
+        alert("Please select tenure before adding to cart");
+        return;
+      }
+
+      const payload = {
+        productId,
+        quantity: 1,
+        tenure,
+        //   deliveryDate
+      };
+
+      const res = await api.post("/cart", payload);
+      console.log("Added to Cart:", res.data);
+
+      navigate("/cart");
+    } catch (error) {
+      console.error(
+        "Error adding to cart:",
+        error.response?.data || error.message,
+      );
     }
+  };
 
-    const payload = {
-      productId,
-      quantity: 1,
-      tenure: selectedTenure,
-    //   deliveryDate
-    };
-
-    const res = await api.post("/cart", payload);
-    console.log("Added to Cart:", res.data);
-
-    navigate("/cart");
-  } catch (error) {
-    console.error("Error adding to cart:", error.response?.data || error.message);
-  }
-};
-
-
-  const handleRentNow =async (productId)=>{
-   try {
-     await api.post("/rent",{productId,tenure:selectedTenure})
-    console.log("Rent Now:",productId);
-    navigate("/checkout")
-
-   } catch (error) {
-    console.error("Error adding to cart:",error);
-    
-   }
-    
-  }
+  const handleRentNow = async (productId) => {
+    try {
+      await api.post("/rent", { productId, tenure: selectedTenure });
+      console.log("Rent Now:", productId);
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
   return (
     <div className="px-6 py-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -139,7 +136,9 @@ export default function ProductDetailsPage() {
 
           {/* Tenure Options */}
           <div className="mt-4">
-            <h4 className="text-sm font-semibold mb-2">Select Tenure</h4>
+            <h4 className="text-xs text-gray-700 mb-2 tracking-wider">
+              Choose Rental Plan By Month
+            </h4>
             <div className="flex gap-3 flex-wrap">
               {product.tenureOptions?.map((t, idx) => (
                 <button
@@ -151,18 +150,16 @@ export default function ProductDetailsPage() {
                       : "bg-gray-100 text-black"
                   }`}
                 >
-                  {t} months
+                  {t}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Buttons */}
-          <div className="flex gap-4 mt-6">
+          <div className="  md:flex gap-4  mt-6">
             <button
-              onClick={() => handleAddToCart(product._id)}
-              // className="bg-green-600 text-white px-6 py-2 rounded cursor-pointer hover:border-green-600 hover:text-black hover:bg-white"
-              className="bg-green-600 text-white px-6 py-2 rounded cursor-pointer 
+              onClick={() => handleAddToCart(product._id,selectedTenure)}
+              className="flex-1 bg-green-600 text-white px-6 py-2 rounded cursor-pointer 
              border border-transparent 
              hover:border-green-600 hover:text-black hover:bg-white 
              transition duration-300 ease-in-out"
@@ -171,7 +168,7 @@ export default function ProductDetailsPage() {
             </button>
             <button
               onClick={() => handleRentNow(product._id)}
-              className="border border-green-600 text-black px-6 py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
+              className="flex-1 ml-4 border border-green-600 text-black px-6 py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
             >
               Rent Now
             </button>
@@ -238,7 +235,7 @@ export default function ProductDetailsPage() {
               <button
                 onClick={() => toggleWishlist(rp._id)}
                 className={`absolute top-2 right-3 p-1 rounded-full ${
-                  isLiked ? "text-red-500" : "text-gray-400"
+                  wishlist.includes(rp._id) ? "text-red-500" : "text-gray-400"
                 }`}
               >
                 <FaHeart size={16} />
@@ -248,23 +245,38 @@ export default function ProductDetailsPage() {
               <p className="text-xs text-yellow-500">★ {rp.averageRating}</p>
 
               {/* Tenure Options */}
-              <div className="flex gap-2 mt-2 flex-wrap">
-                {product.tenureOptions?.map((t, idx) => (
-                  <span
-                    key={idx}
-                    className="px-2 py-1 border rounded text-xs bg-gray-100 cursor-pointer"
-                  >
-                    {t}m
-                  </span>
-                ))}
+              <div className="">
+                <h4 className="text-[10px] text-gray-700-gray- mb-2 tracking-wider">
+                  Choose Rental Plan By Month
+                </h4>
+                <div className="flex gap-2 mt-2 flex-wrap">
+                  {rp.tenureOptions?.map((t, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedTenureRelated((prev)=>({
+                        ...prev,
+                        [rp._id]:t,
+            
+                      }))
+                    }
+                      className={`flex-1 text-xs  py-2 border rounded ${
+                        selectedTenureRelated[rp._id] === t
+                          ? "bg-green-600 text-white"
+                          : "bg-gray-100 text-black"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Buttons */}
               <div className="flex gap-2 mt-3">
                 <button
-                  onClick={() => handleAddToCart(product._id)}
+                  onClick={() => handleAddToCart(rp._id,selectedTenureRelated[rp._id])}
                   // className="bg-green-600 text-white px-6 py-2 rounded cursor-pointer hover:border-green-600 hover:text-black hover:bg-white"
-                  className="bg-green-600 text-white text-xs px-6 py-2 rounded cursor-pointer 
+                  className="flex-1 bg-green-600 text-white text-xs py-2 rounded cursor-pointer 
              border border-transparent 
              hover:border-green-600 hover:text-black hover:bg-white 
              transition duration-300 ease-in-out"
@@ -272,8 +284,8 @@ export default function ProductDetailsPage() {
                   Add to Cart
                 </button>
                 <button
-                  onClick={() => handleRentNow(product._id)}
-                  className="border border-green-600 text-xs text-black px-6 py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
+                  onClick={() => handleRentNow(rp._id)}
+                  className="flex-1 border border-green-600 text-xs text-black  py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
                 >
                   Rent Now
                 </button>

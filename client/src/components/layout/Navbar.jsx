@@ -6,6 +6,8 @@ import MobileNavbar from "./MobileNabar";
 import MobileMenu from "./MobileMenu";
 import DesktopTopbar from "./DesktopTopbar";
 import CategoryMenu from "./CategoryMenu";
+import { useCart } from "../../context/CartContext";
+import {useWishlist} from "../../context/WishlistContext"
 
 const Navbar = () => {
   const [search, setSearch] = useState("");
@@ -14,11 +16,17 @@ const Navbar = () => {
 
   const [mobileMenu, setMobileMenu] = useState(false);
 
+  const {cartItems} = useCart();
+  const {wishlist} = useWishlist();
 
 
-  const cartCount = 0;
 
-  const wishlistCount = 0;
+  const cartCount = cartItems.reduce(
+    (total,item)=>total+(item.quantity || 1),
+    0
+  );
+
+  const wishlistCount = wishlist.length;
 
   const location = "Bangalore, 560001";
 

@@ -46,20 +46,39 @@ const DesktopNavbar = ({ search, setSearch, cartCount, wishlistCount,darkMode,se
 
       {/* Right */}
       <div className="flex items-center gap-10">
-     
-        <div
+        {/* <div
           onClick={() => navigate("/wishlist")}
           className="relative cursor-pointer"
         >
           <FaHeart />
           {wishlistCount > 0 && <span>{wishlistCount}</span>}
-        </div>
+        </div> */}
+
         <div
+          onClick={() => navigate("wishlist")}
+          className="relative cursor-pointer"
+        >
+          <FaHeart className="text-lg" />
+          {wishlistCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+              {wishlistCount}
+            </span>
+          )}
+        </div>
+        {/* <div
           onClick={() => navigate("/cart")}
           className="relative cursor-pointer"
         >
           <FaShoppingCart />
           {cartCount > 0 && <span>{cartCount}</span>}
+        </div> */}
+        <div className="relative cursor-pointer">
+          <FaShoppingCart className="text-lg" />
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
         </div>
         <div
           onClick={() => navigate("/profile")}

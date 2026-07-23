@@ -31,7 +31,7 @@ const MobileMenu = ({
     { title: "New Arrivals", icon: <FaFire />, path: "/new-arrivals" },
     { title: "Offers & Deals", icon: <FaPercent />, path: "/offers" },
     { title: "My Orders", icon: <FaBoxOpen />, path: "/orders" },
-    { title: "Wishlist", icon: <FaHeart />, path: "/wishlist" },
+    // { title: "Wishlist", icon: <FaHeart />, path: "/wishlist" },
   ];
 
   return (
