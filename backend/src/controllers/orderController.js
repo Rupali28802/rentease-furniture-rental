@@ -152,7 +152,7 @@ export const getOrders = async (req, res) => {
 // Get Single Order
 export const getOrderById = async(req,res)=>{
   try {
-    const order = await order.findById(req.params.id).populate("items.product user");
+    const order = await Order.findById(req.params.id).populate("items.product user");
     if(!order) return res.status(404).json({message:"order not found"})
 
       if(order.user._id.toString() !=req.user._id.toString() && !req.user.isAdmin){

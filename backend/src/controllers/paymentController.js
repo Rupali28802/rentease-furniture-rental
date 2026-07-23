@@ -15,7 +15,7 @@ export const verifyPayment = async (req, res) => {
       userId,
     } = req.body;
 
-    // 🔍 FIND ORDER
+    //  FIND ORDER
     const order = await Order.findById(orderId).populate("user");
 
     if (!order) {
@@ -24,14 +24,14 @@ export const verifyPayment = async (req, res) => {
       });
     }
 
-    // 🔐 OWNERSHIP CHECK
+    //  OWNERSHIP CHECK
     if (order.user._id.toString() !== userId) {
       return res.status(403).json({
         message: "Unauthorized",
       });
     }
 
-    // 🚫 ALREADY PAID CHECK
+    // ALREADY PAID CHECK
     if (order.paymentStatus === "paid") {
       return res.status(400).json({
         message: "Payment already verified",
@@ -46,13 +46,13 @@ export const verifyPayment = async (req, res) => {
       .update(sign.toString())
       .digest("hex");
 
-    // ❌ PAYMENT FAILED
+    //  PAYMENT FAILED
     if (razorpay_signature !== expectedSign) {
       order.paymentStatus = "failed";
 
       await order.save();
 
-      // 🔔 NOTIFICATION
+      // NOTIFICATION
       await Notification.create({
         user: userId,
 
@@ -85,7 +85,7 @@ export const verifyPayment = async (req, res) => {
       });
     }
 
-    // ✅ PAYMENT SUCCESS
+    //  PAYMENT SUCCESS
     order.status = "confirmed";
 
     order.paymentStatus = "paid";
@@ -102,7 +102,7 @@ export const verifyPayment = async (req, res) => {
 
     await order.save();
 
-    // 🔔 NOTIFICATION
+    //  NOTIFICATION
     await Notification.create({
       user: userId,
 
@@ -156,8 +156,8 @@ export const razorpayWebhook = async (req, res) => {
     shasum.update(JSON.stringify(req.body));
     const digest = shasum.digest("hex");
 
-    if(digest !==req.headers["x-razorpay-signiture"]){
-      return res.status(400).json({message:"Invalid webhook signiture"});
+    if(digest !==req.headers["x-razorpay-signature"]){
+      return res.status(400).json({message:"Invalid webhook signature"});
     }
 
     const event = req.body.event;
