@@ -13,6 +13,7 @@ import WishlistPage from "../pages/Wishlist";
 import {ProtectedRoute} from "../routes/ProtectedRoute"
 import ProductDetailsPage from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
+import AddressPage from "../pages/MyAddressPage";
 
 
 const AppRoutes = () => {
@@ -59,7 +60,7 @@ const AppRoutes = () => {
             path="/cart"
             element={
               <ProtectedRoute>
-               <Cart/>
+                <Cart />
               </ProtectedRoute>
             }
           />
@@ -69,6 +70,14 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/addresses"
+            element={
+              <ProtectedRoute>
+                <AddressPage/>
               </ProtectedRoute>
             }
           />

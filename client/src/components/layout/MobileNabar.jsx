@@ -83,7 +83,7 @@ const MobileNavbar = ({
           </div>
 
           {/* CART */}
-          <div className="relative cursor-pointer">
+          <div onClick={()=>navigate("cart")} className="relative cursor-pointer">
             <FaShoppingCart className="text-lg" />
             {cartCount > 0 && (
               <span className="absolute -top-3 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
