@@ -130,7 +130,7 @@ export const verifyPayment = async (req, res) => {
       `,
     });
 
-    // 🛒 CLEAR CART
+    // CLEAR CART
     await Cart.deleteMany({
       user: userId,
     });
@@ -147,71 +147,71 @@ export const verifyPayment = async (req, res) => {
   }
 };
 
-export const razorpayWebhook = async (req, res) => {
-  try {
-    const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+// export const razorpayWebhook = async (req, res) => {
+//   try {
+//     const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
-    // Verify Signiture
-    const shasum = crypto.createHmac("sha256",secret);
-    shasum.update(JSON.stringify(req.body));
-    const digest = shasum.digest("hex");
+//     // Verify Signiture
+//     const shasum = crypto.createHmac("sha256",secret);
+//     shasum.update(JSON.stringify(req.body));
+//     const digest = shasum.digest("hex");
 
-    if(digest !==req.headers["x-razorpay-signature"]){
-      return res.status(400).json({message:"Invalid webhook signature"});
-    }
+//     if(digest !==req.headers["x-razorpay-signature"]){
+//       return res.status(400).json({message:"Invalid webhook signature"});
+//     }
 
-    const event = req.body.event;
-    const payload = req.body.payload;
+//     const event = req.body.event;
+//     const payload = req.body.payload;
 
-    if(event === "payment.captured"){
-      const orderId = payload.payment.entity.notes.orderId;
-      const order = await Order.findById(orderId).populate("user");
+//     if(event === "payment.captured"){
+//       const orderId = payload.payment.entity.notes.orderId;
+//       const order = await Order.findById(orderId).populate("user");
 
-      if(order){
-        order.paymentStatus = "paid";
-        order.status = "confirmed";
-        order.activityLog.push({
-          action:"Payment captured via webhook",
-          updatedBy:order.user._id,
-        });
-        await order.save()
+//       if(order){
+//         order.paymentStatus = "paid";
+//         order.status = "confirmed";
+//         order.activityLog.push({
+//           action:"Payment captured via webhook",
+//           updatedBy:order.user._id,
+//         });
+//         await order.save()
 
-      }
-    }
+//       }
+//     }
 
-    if(event === "payment.failed"){
-      const orderId = payload.payment.entity.notes.orderId;
-      const order = await Order.findById(orderId).populate("user");
+//     if(event === "payment.failed"){
+//       const orderId = payload.payment.entity.notes.orderId;
+//       const order = await Order.findById(orderId).populate("user");
 
-      if(order){
-        order.paymentStatus = "failed";
-        order.status = "cancelled";
-        order.activityLog.push({
-          action:"Payment failed via webhook",
-          updatedBy:order.user._id,
-        });
-        await order.save();
-      }
-    }
+//       if(order){
+//         order.paymentStatus = "failed";
+//         order.status = "cancelled";
+//         order.activityLog.push({
+//           action:"Payment failed via webhook",
+//           updatedBy:order.user._id,
+//         });
+//         await order.save();
+//       }
+//     }
 
-    if(event === "refound.processed"){
-      const orderId = payload.refound.entity.notes.orderId;
-      const order = Order.findById(orderId).populate("user");
+//     if(event === "refound.processed"){
+//       const orderId = payload.refound.entity.notes.orderId;
+//       const order = Order.findById(orderId).populate("user");
 
-      if(order){
-        order.paymentStatus = "refound";
-        order.refoundAmount = payload.refound.entity.amount / 100;
-        order.activityLog.push({
-          action: `Refound processed: ₹${order.refoundAmount}`,
-          updatedBy:order.user._id,
-        });
-        await order.save();
+//       if(order){
+//         order.paymentStatus = "refound";
+//         order.refoundAmount = payload.refound.entity.amount / 100;
+//         order.activityLog.push({
+//           action: `Refound processed: ₹${order.refoundAmount}`,
+//           updatedBy:order.user._id,
+//         });
+//         await order.save();
 
-      }
-    }
+//       }
+//     }
 
-    res.json({status:"ok"});
-  } catch (error) {
-    res.status(500).json({message:error.message})
-  }
-};
+//     res.json({status:"ok"});
+//   } catch (error) {
+//     res.status(500).json({message:error.message})
+//   }
+// };
