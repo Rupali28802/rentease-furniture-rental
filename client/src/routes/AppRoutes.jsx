@@ -14,6 +14,7 @@ import {ProtectedRoute} from "../routes/ProtectedRoute"
 import ProductDetailsPage from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import AddressPage from "../pages/MyAddressPage";
+import CheckoutPage from "../pages/Checkout"
 
 
 const AppRoutes = () => {
@@ -77,10 +78,19 @@ const AppRoutes = () => {
             path="/profile/addresses"
             element={
               <ProtectedRoute>
-                <AddressPage/>
+                <AddressPage />
               </ProtectedRoute>
             }
           />
+
+          <Route 
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage/>
+            </ProtectedRoute>
+          }
+          />         
         </Route>
 
         {/* Auth Routes (without Navbar/Footer) */}
