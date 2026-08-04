@@ -57,7 +57,7 @@ const Profile = () => {
 
         {/* Addresses */}
         <button
-          onClick={() => navigate("/addresses")}
+          onClick={() => navigate("/profile/addresses")}
           className="flex items-center gap-4 p-5 rounded-xl border hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-gray-700 transition"
         >
           <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 text-xl" />

@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { getInitials } from "../../utils/getInitials";
+import { useAddress } from "../../context/AddressContext";
 
 const TabletNavbar = ({
   search,
@@ -20,6 +21,7 @@ const TabletNavbar = ({
   setMobileMenu,
 }) => {
   const navigate = useNavigate();
+  const {selectedAddress} = useAddress()
   const { user } = useAuth();
 
   return (
@@ -102,7 +104,10 @@ const TabletNavbar = ({
         </div>
       </div>
       <div className="bg-white px-4 py-2 flex items-center gap-2">
-        <FaMapMarkerAlt className="text-red-500" /> Deliver to: {location}
+        <FaMapMarkerAlt className="text-red-500" /> Deliver to: {""}
+        {selectedAddress ? `${selectedAddress.city},${selectedAddress.state},${selectedAddress.pincode}`
+        :"select address"}
+        
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useAddress } from "../../context/AddressContext";
 import {
   FaBars,
   FaCouch,
@@ -21,6 +22,7 @@ const MobileNavbar = ({
 
 }) => {
   const navigate = useNavigate();
+  const {selectedAddress} = useAddress()
 
   const handleSearch = () => {
     if (!search.trim()) return;
@@ -101,7 +103,9 @@ const MobileNavbar = ({
       <div className="bg-white dark:bg-gray-800 border-t border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center gap-2">
         <FaMapMarkerAlt className="text-red-500" />
         <p className="text-sm font-semibold dark:text-white">
-          Deliver to: {location}
+          Deliver to: {""}
+         { selectedAddress? `${selectedAddress.city},${selectedAddress.state}-${selectedAddress.pincode}`
+          :"select address"}
         </p>
         <FaChevronDown className="dark:text-white ml-1" />
       </div>
