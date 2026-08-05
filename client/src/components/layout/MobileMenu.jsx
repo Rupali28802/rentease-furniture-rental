@@ -8,24 +8,19 @@ import {
   FaUser,
   FaChevronRight,
   FaHeadset,
-FaSun,     
-  FaMoon  ,
+  FaHandshake,
+  FaSun,
+  FaMoon,
   FaPercent,
   FaFire,
 } from "react-icons/fa";
-import { useAuth } from "../../context/AuthContext"
-import { getInitials } from "../../utils/getInitials"
+import { useAuth } from "../../context/AuthContext";
+import { getInitials } from "../../utils/getInitials";
 
-const MobileMenu = ({
-  mobileMenu,
-  setMobileMenu,
-  categories,
-
-}) => {
+const MobileMenu = ({ mobileMenu, setMobileMenu, categories }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
- 
   const mainLinks = [
     { title: "Home", icon: <FaHome />, path: "/" },
     { title: "New Arrivals", icon: <FaFire />, path: "/new-arrivals" },
@@ -153,8 +148,6 @@ const MobileMenu = ({
 
         {/* Footer */}
         <div className="border-t dark:border-gray-800 p-4 bg-gray-50 dark:bg-[#0f172a]">
-          
-
           {/* Support */}
           <button
             onClick={() => navigate("/help")}
@@ -162,6 +155,15 @@ const MobileMenu = ({
           >
             <FaHeadset />
             <span className="font-medium">Help & Support</span>
+          </button>
+
+          {/* Become Partner */}
+          <button
+            onClick={() => navigate("/partner")}
+            className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-all mt-2 dark:text-white"
+          >
+            <FaHandshake />
+            <span className="font-medium">Become a Partner</span>
           </button>
         </div>
       </div>

@@ -14,6 +14,7 @@ import promoBannerRoutes from "./routes/promoBannerRoutes.js";
 import featureRoutes from "./routes/featureRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import helpRoutes from "./routes/helpRoutes.js";
+import partnerRoutes from "./routes/partnerRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -42,4 +43,5 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/coupons", cartRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/help", helpRoutes);
+app.use("/api/partner", partnerRoutes);
 export default app;

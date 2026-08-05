@@ -3,8 +3,8 @@ import { useAddress } from "../../context/AddressContext";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const DesktopTopbar = ({ location }) => {
-  const{selectedAddress} = useAddress()
-  const navigate = useNavigate()
+  const { selectedAddress } = useAddress();
+  const navigate = useNavigate();
   return (
     <div className="hidden lg:flex justify-between items-center px-10 py-2 bg-white text-sm shadow-sm">
       <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
@@ -26,14 +26,19 @@ const DesktopTopbar = ({ location }) => {
           Track Order
         </p>
 
-<p
+        <p
           onClick={() => navigate("/help")}
           className="cursor-pointer hover:text-green-700"
         >
           Help
         </p>
 
-        <p className="cursor-pointer hover:text-green-700">Become Partner</p>
+        <p
+          onClick={() => navigate("/partner")}
+          className="cursor-pointer hover:text-green-700"
+        >
+          Become Partner
+        </p>
       </div>
     </div>
   );

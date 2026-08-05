@@ -19,6 +19,7 @@ import OffersDeals from "../pages/OffersDeals";
 import Orders from "../pages/Orders";
 import TrackOrder from "../pages/TrackOrder";
 import Help from "../pages/Help";
+import Partner from "../pages/Partner";
 
 const AppRoutes = () => {
   return (
@@ -121,11 +122,20 @@ const AppRoutes = () => {
             }
           />
 
-          <Route
+<Route
             path="/help"
             element={
               <ProtectedRoute>
                 <Help />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/partner"
+            element={
+              <ProtectedRoute>
+                <Partner />
               </ProtectedRoute>
             }
           />

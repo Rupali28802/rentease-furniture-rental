@@ -44,6 +44,17 @@
 - [x] 20. Create `backend/src/routes/helpRoutes.js` - help routes
 - [x] 21. Register `/api/help` in `backend/src/app.js`
 
+### Become a Partner Page
+
+- [x] 22. Create `client/src/pages/Partner.jsx` - Become a Partner page with benefits + application form
+- [x] 23. Add `/partner` route in `client/src/routes/AppRoutes.jsx`
+- [x] 24. Wire "Become Partner" link in `client/src/components/layout/DesktopTopbar.jsx`
+- [x] 25. Add "Become a Partner" link in `client/src/components/layout/MobileMenu.jsx`
+- [x] 26. Create `backend/src/models/Partner.js` - partner application model
+- [x] 27. Create `backend/src/controllers/partnerController.js` - apply, get my, get all
+- [x] 28. Create `backend/src/routes/partnerRoutes.js` - partner routes
+- [x] 29. Register `/api/partner` in `backend/src/app.js`
+
 ### Testing
 
 - [ ] 5. Verify cart checkout flow (full cart) works
