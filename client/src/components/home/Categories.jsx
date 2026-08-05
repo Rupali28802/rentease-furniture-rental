@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../api/axios";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ShopByCategory() {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -34,6 +34,10 @@ export default function ShopByCategory() {
           <h2 className="text-2xl font-bold tracking-wide">Shop by Category</h2>
           <a
             href="/categories"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/categories");
+            }}
             className="text-green-600 font-medium hover:underline"
           >
             View All

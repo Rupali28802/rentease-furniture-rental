@@ -148,7 +148,7 @@ const MobileMenu = ({ mobileMenu, setMobileMenu, categories }) => {
 
         {/* Footer */}
         <div className="border-t dark:border-gray-800 p-4 bg-gray-50 dark:bg-[#0f172a]">
-          {/* Support */}
+{/* Support */}
           <button
             onClick={() => navigate("/help")}
             className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-all mt-2 dark:text-white"

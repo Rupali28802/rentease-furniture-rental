@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useWishlist } from "../context/WishlistContext";
 import { useProducts } from "../context/ProductContext";
+import { useCart } from "../context/CartContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 
@@ -22,7 +23,9 @@ export default function ProductsPage() {
   } = useProducts();
 
   const { wishlist, toggleWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const [price, setPrice] = useState(filters.maxPrice || 5000);
+  const [selectedTenures, setSelectedTenures] = useState({});
 
   useEffect(() => {
     if (initialCategory) {
@@ -34,9 +37,41 @@ export default function ProductsPage() {
     }
   }, [initialCategory, setFilters]);
 
-  const resetFilters = () => {
+const resetFilters = () => {
     setPrice(5000);
     setFilters(defaultFilters);
+  };
+
+  const handleAddToCart = async (productId, tenure) => {
+    if (!tenure) {
+      alert("Please select tenure before adding to cart");
+      return;
+    }
+    try {
+      await addToCart(productId, tenure);
+      navigate("/cart");
+    } catch (error) {
+      console.error(
+        "Error adding to cart:",
+        error.response?.data || error.message,
+      );
+    }
+  };
+
+  const handleRentNow = (product, tenure) => {
+    if (!tenure) {
+      alert("Please select tenure before renting");
+      return;
+    }
+    navigate("/checkout", {
+      state: {
+        rentNow: true,
+        product,
+        tenure,
+        quantity: 1,
+        deposit: product.deposit,
+      },
+    });
   };
 
   return (
@@ -197,7 +232,7 @@ export default function ProductsPage() {
                       className="w-full h-48 object-cover"
                     />
 
-                    {/* INFO */}
+{/* INFO */}
                     <div className="p-3">
                       <h3 className="font-medium text-sm mb-2">
                         {product.name}
@@ -212,6 +247,64 @@ export default function ProductsPage() {
                       <p className="text-xs text-gray-500 mt-1">
                         + Deposit ₹{product.deposit}
                       </p>
+
+                      {/* Tenure Selector */}
+                      {product.tenureOptions?.length > 0 && (
+                        <div
+                          className="mt-3"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <p className="text-xs text-gray-600 mb-1">
+                            Tenure (months)
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {product.tenureOptions.map((t) => (
+                              <button
+                                key={t}
+                                onClick={() =>
+                                  setSelectedTenures((prev) => ({
+                                    ...prev,
+                                    [product._id]: t,
+                                  }))
+                                }
+                                className={`px-2 py-1 text-xs border rounded ${
+                                  selectedTenures[product._id] === t
+                                    ? "bg-green-600 text-white"
+                                    : "bg-gray-100 text-black"
+                                }`}
+                              >
+                                {t}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Buttons */}
+                      <div
+                        className="flex gap-2 mt-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          onClick={() =>
+                            handleAddToCart(
+                              product._id,
+                              selectedTenures[product._id],
+                            )
+                          }
+                          className="flex-1 bg-green-600 text-white text-xs py-2 rounded cursor-pointer border border-transparent hover:border-green-600 hover:text-green-700 hover:bg-white transition duration-300"
+                        >
+                          Add to Cart
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleRentNow(product, selectedTenures[product._id])
+                          }
+                          className="flex-1 border border-green-600 text-green-700 text-xs py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300"
+                        >
+                          Rent Now
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
