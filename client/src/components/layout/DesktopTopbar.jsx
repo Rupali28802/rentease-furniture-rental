@@ -26,7 +26,12 @@ const DesktopTopbar = ({ location }) => {
           Track Order
         </p>
 
-        <p className="cursor-pointer hover:text-green-700">Help</p>
+<p
+          onClick={() => navigate("/help")}
+          className="cursor-pointer hover:text-green-700"
+        >
+          Help
+        </p>
 
         <p className="cursor-pointer hover:text-green-700">Become Partner</p>
       </div>

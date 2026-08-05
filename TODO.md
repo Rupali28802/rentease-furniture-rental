@@ -34,6 +34,16 @@
 - [x] 13. Add "Track Order" button on each order card in `client/src/pages/Orders.jsx`
 - [x] 14. Add "Track Order" link in `client/src/components/layout/DesktopNavbar.jsx`
 
+### Help Page
+
+- [x] 15. Create `client/src/pages/Help.jsx` - Help & Support page with FAQs and contact form
+- [x] 16. Add `/help` route in `client/src/routes/AppRoutes.jsx`
+- [x] 17. Wire "Help" link in `client/src/components/layout/DesktopTopbar.jsx`
+- [x] 18. Create `backend/src/models/SupportTicket.js` - support ticket model
+- [x] 19. Create `backend/src/controllers/helpController.js` - FAQ, submit ticket, get tickets
+- [x] 20. Create `backend/src/routes/helpRoutes.js` - help routes
+- [x] 21. Register `/api/help` in `backend/src/app.js`
+
 ### Testing
 
 - [ ] 5. Verify cart checkout flow (full cart) works

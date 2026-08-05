@@ -18,6 +18,7 @@ import NewArrivals from "../pages/NewArrivals";
 import OffersDeals from "../pages/OffersDeals";
 import Orders from "../pages/Orders";
 import TrackOrder from "../pages/TrackOrder";
+import Help from "../pages/Help";
 
 const AppRoutes = () => {
   return (
@@ -116,6 +117,15 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute>
                 <TrackOrder />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/help"
+            element={
+              <ProtectedRoute>
+                <Help />
               </ProtectedRoute>
             }
           />

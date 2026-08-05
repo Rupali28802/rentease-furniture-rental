@@ -13,6 +13,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import promoBannerRoutes from "./routes/promoBannerRoutes.js";
 import featureRoutes from "./routes/featureRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import helpRoutes from "./routes/helpRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -40,4 +41,5 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/coupons", cartRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/help", helpRoutes);
 export default app;

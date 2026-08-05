@@ -157,7 +157,7 @@ const MobileMenu = ({
 
           {/* Support */}
           <button
-            onClick={() => navigate("/support")}
+            onClick={() => navigate("/help")}
             className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-800 transition-all mt-2 dark:text-white"
           >
             <FaHeadset />
