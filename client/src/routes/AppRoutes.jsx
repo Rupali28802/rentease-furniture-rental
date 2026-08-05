@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayouts";
@@ -10,12 +9,15 @@ import ResetPassword from "../pages/ResetPassword";
 import Profile from "../pages/Profile";
 import ProductPage from "../pages/Products";
 import WishlistPage from "../pages/Wishlist";
-import {ProtectedRoute} from "../routes/ProtectedRoute"
+import { ProtectedRoute } from "../routes/ProtectedRoute";
 import ProductDetailsPage from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import AddressPage from "../pages/MyAddressPage";
-import CheckoutPage from "../pages/Checkout"
-
+import CheckoutPage from "../pages/Checkout";
+import NewArrivals from "../pages/NewArrivals";
+import OffersDeals from "../pages/OffersDeals";
+import Orders from "../pages/Orders";
+import TrackOrder from "../pages/TrackOrder";
 
 const AppRoutes = () => {
   return (
@@ -67,6 +69,23 @@ const AppRoutes = () => {
           />
 
           <Route
+            path="/new-arrivals"
+            element={
+              <ProtectedRoute>
+                <NewArrivals />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/offers"
+            element={
+              <ProtectedRoute>
+                <OffersDeals />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
@@ -83,14 +102,32 @@ const AppRoutes = () => {
             }
           />
 
-          <Route 
-          path="/checkout"
-          element={
-            <ProtectedRoute>
-              <CheckoutPage/>
-            </ProtectedRoute>
-          }
-          />         
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/orders/track/:id"
+            element={
+              <ProtectedRoute>
+                <TrackOrder />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* Auth Routes (without Navbar/Footer) */}

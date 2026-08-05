@@ -3,11 +3,9 @@ import Review from "../models/review.js";
 import Notification from "../models/Notification.js";
 import fs from "fs";
 
-
 // CREATE PRODUCT
 export const createProduct = async (req, res) => {
   try {
-    
     const galleryImages = req.files?.gallery
       ? req.files.gallery.map((file) => file.path)
       : req.body.gallery || [];
@@ -38,7 +36,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-
 export const getProducts = async (req, res) => {
   try {
     let {
@@ -50,12 +47,15 @@ export const getProducts = async (req, res) => {
       page = 1,
       limit = 20,
       available,
+      isNewArrival,
+      discounted,
+      condition,
       sort = "popular",
     } = req.query;
 
     page = Number(page);
     limit = Number(limit);
-console.log(req.query);
+    console.log(req.query);
     let query = {};
 
     //  Search
@@ -63,11 +63,12 @@ console.log(req.query);
       query.name = { $regex: search, $options: "i" };
     }
 
-
-    if(category){
-      const categories = Array.isArray(category) ? category:category.split(",");
-      query.category={
-        $in:categories,
+    if (category) {
+      const categories = Array.isArray(category)
+        ? category
+        : category.split(",");
+      query.category = {
+        $in: categories,
       };
     }
 
@@ -85,6 +86,21 @@ console.log(req.query);
     //  Availability filter
     if (available !== undefined) {
       query.isAvailable = available === "true";
+    }
+
+    //  New Arrivals filter
+    if (isNewArrival !== undefined) {
+      query.isNewArrival = isNewArrival === "true";
+    }
+
+    //  Discounted / Offers filter
+    if (discounted === "true") {
+      query.discount = { $gt: 0 };
+    }
+
+    //  Condition filter (e.g. "new", "good", "used")
+    if (condition) {
+      query.condition = condition;
     }
 
     let sortOption = {};
@@ -135,7 +151,6 @@ export const getProductById = async (req, res) => {
       averageRating: avgRating,
       reviewCount: reviews.length,
     });
-    
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -178,12 +193,12 @@ export const updateProduct = async (req, res) => {
     }
 
     product = await product.save();
-     await Notification.create({
-       user: req.user._id,
-       title: "Product Updated ✏️",
-       message: `${product.name} updated successfully`,
-       type: "SYSTEM",
-     });
+    await Notification.create({
+      user: req.user._id,
+      title: "Product Updated ✏️",
+      message: `${product.name} updated successfully`,
+      type: "SYSTEM",
+    });
 
     res.json({
       message: "Product updated successfully",
@@ -217,11 +232,8 @@ export const deleteProduct = async (req, res) => {
       type: "SYSTEM",
     });
 
-
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
-

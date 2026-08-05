@@ -6,12 +6,19 @@ import {
   FaCouch,
   FaSearch,
   FaSun,
-  FaMoon
+  FaMoon,
 } from "react-icons/fa";
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../context/AuthContext";
 import { getInitials } from "../../utils/getInitials";
 
-const DesktopNavbar = ({ search, setSearch, cartCount, wishlistCount,darkMode,setDarkMode }) => {
+const DesktopNavbar = ({
+  search,
+  setSearch,
+  cartCount,
+  wishlistCount,
+  darkMode,
+  setDarkMode,
+}) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -47,12 +54,20 @@ const DesktopNavbar = ({ search, setSearch, cartCount, wishlistCount,darkMode,se
       {/* Right */}
       <div className="flex items-center gap-10">
         {/* <div
-          onClick={() => navigate("/wishlist")}
-          className="relative cursor-pointer"
+          onClick={() => navigate("/new-arrivals")}
+          className="cursor-pointer font-medium text-gray-700 hover:text-green-700 transition"
         >
-          <FaHeart />
-          {wishlistCount > 0 && <span>{wishlistCount}</span>}
+          New Arrivals
+        </div>
+
+        <div
+          onClick={() => navigate("/offers")}
+          className="cursor-pointer font-medium text-red-600 hover:text-red-700 transition"
+        >
+          Offers & Deals
         </div> */}
+
+       
 
         <div
           onClick={() => navigate("wishlist")}
@@ -72,7 +87,10 @@ const DesktopNavbar = ({ search, setSearch, cartCount, wishlistCount,darkMode,se
           <FaShoppingCart />
           {cartCount > 0 && <span>{cartCount}</span>}
         </div> */}
-        <div onClick={()=>navigate("cart")} className="relative cursor-pointer">
+        <div
+          onClick={() => navigate("cart")}
+          className="relative cursor-pointer"
+        >
           <FaShoppingCart className="text-lg" />
           {cartCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">

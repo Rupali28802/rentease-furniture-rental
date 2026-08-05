@@ -13,6 +13,7 @@ export const verifyPayment = async (req, res) => {
       razorpay_signature,
       orderId,
       userId,
+      rentNow,
     } = req.body;
 
     //  FIND ORDER
@@ -56,7 +57,7 @@ export const verifyPayment = async (req, res) => {
       await Notification.create({
         user: userId,
 
-        title: "Payment Failed ❌",
+        title: "Payment Failed ",
 
         message: "Payment verification failed",
 
@@ -130,10 +131,13 @@ export const verifyPayment = async (req, res) => {
       `,
     });
 
-    // CLEAR CART
-    await Cart.deleteMany({
-      user: userId,
-    });
+    // CLEAR CART - only for cart checkout.
+    // Rent Now checkout should NOT clear the user's cart.
+    if (!rentNow) {
+      await Cart.deleteMany({
+        user: userId,
+      });
+    }
 
     return res.status(200).json({
       message: "Payment verified successfully",

@@ -1,22 +1,43 @@
 import React, { useState } from "react";
 import { useAddress } from "../context/AddressContext";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { api } from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
   const { selectedAddress } = useAddress();
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Calculate totals
-  const monthlyRent = cartItems.reduce(
-    (acc, item) => acc + item.product.pricePerMonth * item.tenure,
+  // Detect Rent Now mode (comes from ProductDetails "Rent Now" button)
+  const isRentNow = location.state?.rentNow;
+
+  // Build the list of items to checkout.
+  // Rent Now  -> ONLY the selected product
+  // Cart      -> all cart items
+  const checkoutItems = isRentNow
+    ? [
+        {
+          product: location.state.product,
+          tenure: location.state.tenure,
+          quantity: location.state.quantity || 1,
+          deposit: location.state.deposit,
+        },
+      ]
+    : cartItems;
+
+  // Calculate totals using checkoutItems
+  const monthlyRent = checkoutItems.reduce(
+    (acc, item) =>
+      acc + item.product.pricePerMonth * item.tenure * (item.quantity || 1),
     0,
   );
-  const deposit = cartItems.reduce((acc, item) => acc + item.deposit, 0);
-  const totalPayable = deposit; // Payable today = deposit only
+  const deposit = checkoutItems.reduce((acc, item) => acc + item.deposit, 0);
+  const totalPayable = monthlyRent + deposit; // Full amount payable
 
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
@@ -26,40 +47,101 @@ const CheckoutPage = () => {
 
     setLoading(true);
     try {
-      // 1️⃣ Create order on backend
-      const orderRes = await api.post("/orders/create", {
-        address: selectedAddress,
-        items: cartItems,
-      });
+      // Build order payload
+      const orderPayload = {
+        addressId: selectedAddress._id,
+        rentNow: isRentNow,
+      };
 
-      const { razorpayOrderId, amount, currency, orderId } = orderRes.data;
+      if (isRentNow) {
+        // Rent Now -> send only the selected product details
+        const selectedProduct = location.state.product;
+        orderPayload.productId = selectedProduct._id;
+        orderPayload.tenure = location.state.tenure;
+        orderPayload.quantity = location.state.quantity || 1;
+      }
+
+      // 1️⃣ Create order on backend
+      const orderRes = await api.post("/orders", orderPayload);
+
+      const { razorpayOrderId, amount, currency, orderId, razorpayKeyId } =
+        orderRes.data;
 
       // 2️⃣ Razorpay checkout
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        // Use key from backend response (preferred), fallback to env var
+        key: razorpayKeyId || import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount,
         currency,
         name: "RentEase",
         description: "Rental Checkout",
         order_id: razorpayOrderId,
         handler: async function (response) {
-          await api.post("/payment/verify", { ...response, orderId });
-          alert("Payment successful!");
-          navigate("/order-success");
+          try {
+            await api.post("/payment/verify", {
+              ...response,
+              orderId,
+              userId: user?._id,
+              rentNow: isRentNow,
+            });
+
+            // Clear cart ONLY for cart checkout.
+            // Rent Now checkout should NOT clear the cart.
+            if (!isRentNow) {
+              await clearCart();
+            }
+
+            alert("Payment successful!");
+            navigate("/order-success");
+          } catch (verifyErr) {
+            console.error("Payment verification failed:", verifyErr);
+            alert("Payment verification failed. Redirecting to cart!");
+            // Payment verification failed -> redirect to cart (cart is preserved)
+            if (!isRentNow) {
+              navigate("/cart");
+            }
+          }
         },
         prefill: {
-          name: "Rupali",
-          email: "test@example.com",
-          contact: "9999999999",
+          name: user?.name || "",
+          email: user?.email || "",
+          contact: user?.mobile || "",
         },
         theme: { color: "#3399cc" },
       };
 
       const rzp = new window.Razorpay(options);
+
+      // If the user closes the Razorpay modal without paying,
+      // redirect back to the cart page (cart is preserved).
+      rzp.on("payment.failed", function (response) {
+        console.error("Payment failed:", response.error);
+        alert("Payment failed. Redirecting to cart!");
+        if (!isRentNow) {
+          navigate("/cart");
+        }
+      });
+
+      // If the user closes/dismisses the Razorpay modal without paying,
+      // redirect back to the cart page (cart is preserved).
+      rzp.on("modal.close", function () {
+        console.warn("Razorpay modal closed without payment");
+        alert("Payment cancelled. Redirecting to cart!");
+        if (!isRentNow) {
+          navigate("/cart");
+        }
+      });
+
       rzp.open();
     } catch (error) {
       console.error(error);
-      alert("Checkout failed!");
+      alert("Checkout failed! Your cart items are preserved.");
+
+      // If checkout fails, redirect back to the cart page so the user
+      // can retry without losing their cart items.
+      if (!isRentNow) {
+        navigate("/cart");
+      }
     } finally {
       setLoading(false);
     }
@@ -72,13 +154,15 @@ const CheckoutPage = () => {
         <h2 className="text-lg font-bold mb-2">Delivery Address</h2>
         {selectedAddress ? (
           <div>
-            <p className="font-semibold">{selectedAddress.name}</p>
+            <p className="font-semibold">
+              {selectedAddress.firstName} {selectedAddress.lastName}
+            </p>
             <p>{selectedAddress.street}</p>
             <p>
               {selectedAddress.city}, {selectedAddress.state} -{" "}
               {selectedAddress.pincode}
             </p>
-            <p>{selectedAddress.phone}</p>
+            <p>{selectedAddress.mobile}</p>
             <button
               onClick={() => navigate("/profile/addresses")}
               className="text-blue-600 mt-2 hover:underline"
@@ -127,9 +211,9 @@ const CheckoutPage = () => {
       {/* RIGHT: Order Details */}
       <div className="border rounded-md p-4 shadow col-span-1">
         <h2 className="text-lg font-bold mb-2">Order Details</h2>
-        {cartItems.map((item) => (
+        {checkoutItems.map((item) => (
           <div
-            key={item._id}
+            key={item._id || item.product?._id}
             className="flex justify-between items-center mb-4 border-b pb-2"
           >
             <div className="flex items-center gap-3">

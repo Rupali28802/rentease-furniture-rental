@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -12,11 +11,11 @@ export default function CategoryMenu() {
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/categories")
-      .then((res) => 
-      {console.log("Categories API Response:", res.data)
-      setCategories(res.data)})
-     
-      
+      .then((res) => {
+        console.log("Categories API Response:", res.data);
+        setCategories(res.data);
+      })
+
       .catch((err) => console.error(err));
   }, []);
 
@@ -72,10 +71,20 @@ export default function CategoryMenu() {
 
         {/* Inline Links */}
         <div className="flex gap-3 md:gap-4 ml-2 lg:gap-8 tracking-wider">
+          <button
+            onClick={() => navigate("/new-arrivals")}
+            className="font-medium tracking-wide text-gray-800 hover:text-green-600 text-sm md:text-base lg:text-lg"
+          >
+            New Arrivals
+          </button>
           {filteredCategories.map((cat) => (
             <button
               key={cat._id}
-              onClick={() => navigate(`/category/${cat.slug}`)}
+              onClick={() =>
+                cat.slug === "offers"
+                  ? navigate("/offers")
+                  : navigate(`/category/${cat.slug}`)
+              }
               className={`font-medium tracking-wide hover:text-green-600
             text-sm md:text-base lg:text-lg lg:gap-4
             ${cat.slug === "offers" ? "text-red-600 font-bold" : "text-gray-800"}`}

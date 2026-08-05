@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../api/axios";
 import { FaHeart } from "react-icons/fa";
 import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 import ReviewForm from "../components/Review/ReviewForm";
 import ReviewCard from "../components/Review/ReviewCard";
 import ReviewPopup from "../components/Review/ReviewPopup";
@@ -15,11 +16,12 @@ export default function ProductDetailsPage() {
   const [mainImage, setMainImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedTenure, setSelectedTenure] = useState(null);
-  const [selectedTenureRelated,setSelectedTenureRelated] = useState({})
+  const [selectedTenureRelated, setSelectedTenureRelated] = useState({});
   //   const [deliveryDate,setDeliveryDate] = useState("")
   const [showPopup, setShowPopup] = useState(false);
 
   const { wishlist, toggleWishlist } = useWishlist();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     api.get(`/products/${id}`).then((res) => {
@@ -46,22 +48,15 @@ export default function ProductDetailsPage() {
   //  check liked status from context
   const isLiked = wishlist.includes(product._id);
 
-  const handleAddToCart = async (productId,tenure) => {
+  const handleAddToCart = async (productId, tenure) => {
     try {
       if (!tenure) {
         alert("Please select tenure before adding to cart");
         return;
       }
 
-      const payload = {
-        productId,
-        quantity: 1,
-        tenure,
-        //   deliveryDate
-      };
-
-      const res = await api.post("/cart", payload);
-      console.log("Added to Cart:", res.data);
+      // Use CartContext so React cart state updates immediately
+      await addToCart(productId, tenure);
 
       navigate("/cart");
     } catch (error) {
@@ -72,14 +67,23 @@ export default function ProductDetailsPage() {
     }
   };
 
-  const handleRentNow = async (productId) => {
-    try {
-      await api.post("/rent", { productId, tenure: selectedTenure });
-      console.log("Rent Now:", productId);
-      navigate("/checkout");
-    } catch (error) {
-      console.error("Error adding to cart:", error);
+  const handleRentNow = (product, tenure) => {
+    if (!tenure) {
+      alert("Please select tenure before renting");
+      return;
     }
+
+    // Pass the selected product via navigate state so Checkout
+    // displays ONLY this product (not cart items).
+    navigate("/checkout", {
+      state: {
+        rentNow: true,
+        product,
+        tenure,
+        quantity: 1,
+        deposit: product.deposit,
+      },
+    });
   };
   return (
     <div className="px-6 py-10">
@@ -158,7 +162,7 @@ export default function ProductDetailsPage() {
 
           <div className="  md:flex gap-4  mt-6">
             <button
-              onClick={() => handleAddToCart(product._id,selectedTenure)}
+              onClick={() => handleAddToCart(product._id, selectedTenure)}
               className="flex-1 bg-green-600 text-white px-6 py-2 rounded cursor-pointer 
              border border-transparent 
              hover:border-green-600 hover:text-black hover:bg-white 
@@ -166,8 +170,8 @@ export default function ProductDetailsPage() {
             >
               Add to Cart
             </button>
-            <button
-              onClick={() => handleRentNow(product._id)}
+<button
+              onClick={() => handleRentNow(product, selectedTenure)}
               className="flex-1 ml-4 border border-green-600 text-black px-6 py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
             >
               Rent Now
@@ -253,12 +257,12 @@ export default function ProductDetailsPage() {
                   {rp.tenureOptions?.map((t, idx) => (
                     <button
                       key={idx}
-                      onClick={() => setSelectedTenureRelated((prev)=>({
-                        ...prev,
-                        [rp._id]:t,
-            
-                      }))
-                    }
+                      onClick={() =>
+                        setSelectedTenureRelated((prev) => ({
+                          ...prev,
+                          [rp._id]: t,
+                        }))
+                      }
                       className={`flex-1 text-xs  py-2 border rounded ${
                         selectedTenureRelated[rp._id] === t
                           ? "bg-green-600 text-white"
@@ -274,7 +278,9 @@ export default function ProductDetailsPage() {
               {/* Buttons */}
               <div className="flex gap-2 mt-3">
                 <button
-                  onClick={() => handleAddToCart(rp._id,selectedTenureRelated[rp._id])}
+                  onClick={() =>
+                    handleAddToCart(rp._id, selectedTenureRelated[rp._id])
+                  }
                   // className="bg-green-600 text-white px-6 py-2 rounded cursor-pointer hover:border-green-600 hover:text-black hover:bg-white"
                   className="flex-1 bg-green-600 text-white text-xs py-2 rounded cursor-pointer 
              border border-transparent 
@@ -283,8 +289,10 @@ export default function ProductDetailsPage() {
                 >
                   Add to Cart
                 </button>
-                <button
-                  onClick={() => handleRentNow(rp._id)}
+<button
+                  onClick={() =>
+                    handleRentNow(rp, selectedTenureRelated[rp._id])
+                  }
                   className="flex-1 border border-green-600 text-xs text-black  py-2 rounded shadow-sm hover:bg-green-600 hover:text-white transition duration-300 ease-in-out"
                 >
                   Rent Now
@@ -297,6 +305,3 @@ export default function ProductDetailsPage() {
     </div>
   );
 }
-
-
-

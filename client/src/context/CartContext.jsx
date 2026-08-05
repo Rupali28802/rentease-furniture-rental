@@ -1,76 +1,3 @@
-// import React, { createContext, useContext, useEffect, useState } from "react";
-// import { api } from "../api/axios";
-
-// const CartContext = createContext();
-
-// export const CartProvider = ({ children }) => {
-//   const [cartItems, setCartItems] = useState([]);
-
-//   // useEffect(() => {
-//   //   api.get("/cart")
-//   //   .then(res=>setCartItems(res.data.items || []))
-
-//   //   .catch(err=>console.error(err));
-//   // },[]);
-
-//   // const addToCart = async(productId,tenure,deliveryDate)=>{
-//   //   const res = await api.post("/cart",{productId,tenure,deliveryDate});
-//   //   setCartItems(prev=>[...prev,res.data.cartItem]);
-//   // };
-
-//   // CartContext.jsx
-//   useEffect(() => {
-//     // Optional: sirf refresh/login ke baad sync ke liye
-//     const fetchCart = async () => {
-//       try {
-//         const res = await api.get("/cart");
-//         setCartItems(res.data.items || []);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchCart();
-//   }, []);
-
-//   // AddToCart
-//   const addToCart = async (productId, tenure, deliveryDate) => {
-//     try {
-//       const res = await api.post("/cart", { productId, tenure, deliveryDate });
-//       setCartItems((prev) => [...prev, res.data.cartItem]); // turant update
-//     } catch (err) {
-//       console.error("Error adding to cart", err);
-//     }
-//   };
-
-//   const removeFromCart = async (id) => {
-//     await api.delete(`/cart/${id}`);
-//     setCartItems((prev) => prev.filter((item) => item._id !== id));
-//   };
-
-//   const updateCart = async (id, quantity) => {
-//     const res = await api.put(`/cart/${id}`, { quantity });
-//     setCartItems((prev) =>
-//       prev.map((item) => (item._id === id ? res.data.cartItem : item)),
-//     );
-//   };
-
-//   const clearCart = async () => {
-//     await api.delete("/cart");
-//     setCartItems([]);
-//   };
-
-//   return (
-//     <CartContext.Provider
-//       value={{ cartItems, addToCart, removeFromCart, updateCart, clearCart }}
-//     >
-//       {children}
-//     </CartContext.Provider>
-//   );
-// };;
-
-// export const useCart = ()=>useContext(CartContext)
-
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../api/axios";
 
@@ -78,34 +5,35 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch the fully populated cart from backend
+  const refreshCart = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/cart");
+      setCartItems(res.data.items || []);
+    } catch (err) {
+      console.error("Error fetching cart", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Initial sync (refresh/login ke baad)
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await api.get("/cart");
-        setCartItems(res.data.items || []);
-      } catch (err) {
-        console.error("Error fetching cart", err);
-      }
-    };
-    fetchCart();
+    refreshCart();
   }, []);
 
   // Add to Cart
   const addToCart = async (productId, tenure, deliveryDate) => {
     try {
-      const res = await api.post("/cart", { productId, tenure, deliveryDate });
-      const newItem = res.data.cartItem;
-
-      // Agar item already hai to update karo, warna push karo
-      setCartItems((prev) =>
-        prev.some((item) => item._id === newItem._id)
-          ? prev.map((item) => (item._id === newItem._id ? newItem : item))
-          : [...prev, newItem],
-      );
+      await api.post("/cart", { productId, tenure, deliveryDate });
+      // Re-fetch the fully populated cart from backend so product data is present
+      await refreshCart();
     } catch (err) {
       console.error("Error adding to cart", err);
+      throw err;
     }
   };
 
@@ -143,7 +71,15 @@ export const CartProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateCart, clearCart }}
+      value={{
+        cartItems,
+        loading,
+        refreshCart,
+        addToCart,
+        removeFromCart,
+        updateCart,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>

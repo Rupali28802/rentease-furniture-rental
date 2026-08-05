@@ -1,26 +1,33 @@
+import { useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateCart, clearCart } = useCart();
+  const { cartItems, removeFromCart, updateCart, clearCart, refreshCart } =
+    useCart();
+  const navigate = useNavigate();
+
+  // Re-sync with backend whenever the cart page mounts
+  useEffect(() => {
+    refreshCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Agar backend totalRent nahi bhej raha to frontend me calculate karo
-  const monthlyRent = cartItems.reduce(
-    (acc, item) => acc + item.product.pricePerMonth * item.tenure,
-    0,
-  );
+  const monthlyRent = cartItems.reduce((acc, item) => {
+    const price = item.product?.pricePerMonth || 0;
+    return acc + price * (item.tenure || 0);
+  }, 0);
 
-  const deposit = cartItems.reduce((acc, item) => acc + item.deposit, 0);
+  const deposit = cartItems.reduce((acc, item) => acc + (item.deposit || 0), 0);
   const grandTotal = monthlyRent + deposit;
-  const navigate = useNavigate()
 
   const handleCheckout = () => {
-    if(cartItems.length === 0){
+    if (cartItems.length === 0) {
       alert("Cart is empty!");
+      return;
     }
-    // Yahan Razorpay / order placement logic aayega
-    console.log("Proceeding to checkout...");
-    navigate("/checkout")
+    navigate("/checkout");
   };
 
   return (
@@ -51,15 +58,17 @@ const Cart = () => {
                 className="bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:items-center gap-4"
               >
                 <img
-                  src={item.product.image}
-                  alt={item.product.name}
+                  src={item.product?.image}
+                  alt={item.product?.name}
                   className="w-[70%] h-32 sm:w-32 sm:h-32 md:w-24 md:h-24 object-cover rounded"
                 />
 
                 <div className="flex-1">
-                  <h2 className="text-lg font-semibold">{item.product.name}</h2>
+                  <h2 className="text-lg font-semibold">
+                    {item.product?.name}
+                  </h2>
                   <p className="text-gray-600">
-                    ₹{item.product.pricePerMonth}/month
+                    ₹{item.product?.pricePerMonth}/month
                   </p>
                   <p className="text-xs text-gray-500">
                     Deposit: ₹{item.deposit}
@@ -68,7 +77,10 @@ const Cart = () => {
                     Tenure: {item.tenure} months
                   </p>
                   <p className="text-xs text-gray-500">
-                    Delivery: {new Date(item.deliveryDate).toLocaleDateString()}
+                    Delivery:{" "}
+                    {item.deliveryDate
+                      ? new Date(item.deliveryDate).toLocaleDateString()
+                      : "-"}
                   </p>
                 </div>
 
