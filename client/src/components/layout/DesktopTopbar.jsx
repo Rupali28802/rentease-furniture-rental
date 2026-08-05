@@ -39,6 +39,8 @@ const DesktopTopbar = ({ location }) => {
         >
           Become Partner
         </p>
+
+        
       </div>
     </div>
   );

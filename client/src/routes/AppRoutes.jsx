@@ -21,6 +21,23 @@ import TrackOrder from "../pages/TrackOrder";
 import Help from "../pages/Help";
 import Partner from "../pages/Partner";
 import AllCategories from "../pages/AllCategories";
+import Settings from "../pages/Settings";
+import { AdminRoute } from "../routes/AdminRoute";
+import AdminLayout from "../layouts/AdminLayout";
+import AdminDashboard from "../pages/admin/Dashboard";
+import AdminUsers from "../pages/admin/AdminUsers";
+import AdminProducts from "../pages/admin/AdminProducts";
+import AdminCategories from "../pages/admin/AdminCategories";
+import AdminOrders from "../pages/admin/AdminOrders";
+import AdminBookings from "../pages/admin/AdminBookings";
+import AdminPayments from "../pages/admin/AdminPayments";
+import AdminCoupons from "../pages/admin/AdminCoupons";
+import AdminReviews from "../pages/admin/AdminReviews";
+import AdminNotifications from "../pages/admin/AdminNotifications";
+import AdminBanners from "../pages/admin/AdminBanners";
+import AdminBlogPosts from "../pages/admin/AdminBlogPosts";
+import AdminSettings from "../pages/admin/AdminSettings";
+import AdminAdmins from "../pages/admin/AdminAdmins";
 
 const AppRoutes = () => {
   return (
@@ -132,7 +149,7 @@ const AppRoutes = () => {
             }
           />
 
-<Route
+          <Route
             path="/partner"
             element={
               <ProtectedRoute>
@@ -158,6 +175,40 @@ const AppRoutes = () => {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
+        {/* Admin Routes (role-protected) */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="bookings" element={<AdminBookings />} />
+          <Route path="payments" element={<AdminPayments />} />
+          <Route path="coupons" element={<AdminCoupons />} />
+          <Route path="reviews" element={<AdminReviews />} />
+          <Route path="notifications" element={<AdminNotifications />} />
+          <Route path="banners" element={<AdminBanners />} />
+          <Route path="blog-posts" element={<AdminBlogPosts />} />
+          <Route path="settings" element={<AdminSettings />} />
+          <Route path="admins" element={<AdminAdmins />} />
         </Route>
 
         {/* Auth Routes (without Navbar/Footer) */}

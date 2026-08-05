@@ -39,7 +39,7 @@ const HeroBannerSlider = () => {
           }}
         >
           <div className="bg-black/40 w-full h-100 flex items-center justify-start px-6 md:px-12">
-            <div className="text-white  md:w-1/2 lg:w-3/7 ml-4 md:ml-20 ">
+            <div className="text-white w-50% m-auto  md:w-1/2 lg:w-3/7  md:ml-20  ">
               <h1
                 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 max-w-90 
                    tracking-tight sm:tracking-normal md:tracking-wide lg:tracking-wider"

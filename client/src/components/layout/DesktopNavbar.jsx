@@ -53,21 +53,14 @@ const DesktopNavbar = ({
 
       {/* Right */}
       <div className="flex items-center gap-10">
-        {/* <div
-          onClick={() => navigate("/new-arrivals")}
-          className="cursor-pointer font-medium text-gray-700 hover:text-green-700 transition"
-        >
-          New Arrivals
-        </div>
-
-        <div
-          onClick={() => navigate("/offers")}
-          className="cursor-pointer font-medium text-red-600 hover:text-red-700 transition"
-        >
-          Offers & Deals
-        </div> */}
-
-       
+        {/* {user?.role === "admin" && (
+          <div
+            onClick={() => navigate("/admin")}
+            className="cursor-pointer font-medium text-green-700 hover:text-green-900 transition"
+          >
+            Admin Panel
+          </div>
+        )} */}
 
         <div
           onClick={() => navigate("wishlist")}

@@ -1,8 +1,7 @@
-import { createContext, useContext, useState,useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { api } from "../api/axios.js";
 // import {useAuth} from "../context/AuthContext"
 // import {getInitials} from "../utils/getInitials.js"
-
 
 const AuthContext = createContext();
 
@@ -10,19 +9,19 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
- useEffect(() => {
-   const storedUser = localStorage.getItem("user");
-   const storedToken = localStorage.getItem("token");
-   if (storedUser && storedUser !== "undefined") {
-     try {
-       setUser(JSON.parse(storedUser));
-       setToken(storedToken);
-     } catch (err) {
-       console.error("Invalid user JSON:", err);
-       localStorage.removeItem("user"); // clear corrupt data
-     }
-   }
- }, []);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUser(JSON.parse(storedUser));
+        setToken(storedToken);
+      } catch (err) {
+        console.error("Invalid user JSON:", err);
+        localStorage.removeItem("user"); // clear corrupt data
+      }
+    }
+  }, []);
 
   // REGISTER
   const register = async (formData) => {
@@ -31,13 +30,12 @@ export const AuthProvider = ({ children }) => {
 
       setUser(res.data.user);
       setToken(res.data.token);
-localStorage.setItem("user",JSON.stringify(res.data.user))
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
 
       return res.data;
       console.log(data);
       console.log(res.data.token);
-      
     } catch (error) {
       throw (
         error.response?.data || {
@@ -54,7 +52,7 @@ localStorage.setItem("user",JSON.stringify(res.data.user))
 
       setUser(res.data.user);
       setToken(res.data.token);
-localStorage.setItem("user",JSON.stringify(res.data.user));
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
 
       return res.data;
@@ -102,15 +100,11 @@ localStorage.setItem("user",JSON.stringify(res.data.user));
   // LOGOUT
   const logout = async () => {
     try {
-      await api.post(
-        "/auth/logout"
-      );
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+      await api.post("/auth/logout");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setUser(null);
       setToken(null);
-
-    
     } catch (error) {
       throw (
         error.response?.data || {
@@ -125,6 +119,7 @@ localStorage.setItem("user",JSON.stringify(res.data.user));
       value={{
         user,
         token,
+        setUser,
         register,
         login,
         logout,
@@ -138,4 +133,3 @@ localStorage.setItem("user",JSON.stringify(res.data.user));
 };
 
 export const useAuth = () => useContext(AuthContext);
-

@@ -110,7 +110,6 @@ code {
   background: var(--code-bg);
 } */
 
-
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));

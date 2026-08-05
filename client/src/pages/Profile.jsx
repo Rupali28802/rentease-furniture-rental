@@ -6,7 +6,7 @@ import {
   FaCog,
   FaUser,
 } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../context/AuthContext";
 import { getInitials } from "../utils/getInitials";
 import { useNavigate } from "react-router-dom";
 
@@ -76,21 +76,32 @@ const Profile = () => {
             Settings
           </span>
         </button>
+
+        {/* Admin Panel (admin only) */}
+        {user?.role === "admin" && (
+          <button
+            onClick={() => navigate("/admin")}
+            className="flex items-center gap-4 p-5 rounded-xl border hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-gray-700 transition"
+          >
+            <FaUser className="text-green-600 dark:text-green-400 text-xl" />
+            <span className="font-medium text-gray-800 dark:text-white">
+              Dashboard
+            </span>
+          </button>
+        )}
       </div>
 
       {/* Logout */}
       {user && (
         <div className="mt-8">
           <button
-            onClick={async() => {
+            onClick={async () => {
               try {
                 await logout();
-                 navigate("/login");
+                navigate("/login");
               } catch (error) {
-                console.log("Logout error:",error.message);
-                
+                console.log("Logout error:", error.message);
               }
-             
             }}
             className="flex items-center gap-4 p-5 rounded-xl border hover:bg-red-50 dark:hover:bg-red-900 dark:border-gray-700 transition text-red-600 dark:text-red-400"
           >

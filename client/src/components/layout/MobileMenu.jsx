@@ -21,13 +21,22 @@ const MobileMenu = ({ mobileMenu, setMobileMenu, categories }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const mainLinks = [
+const mainLinks = [
     { title: "Home", icon: <FaHome />, path: "/" },
     { title: "New Arrivals", icon: <FaFire />, path: "/new-arrivals" },
     { title: "Offers & Deals", icon: <FaPercent />, path: "/offers" },
     { title: "My Orders", icon: <FaBoxOpen />, path: "/orders" },
     // { title: "Wishlist", icon: <FaHeart />, path: "/wishlist" },
   ];
+
+  // Admin-only link
+  if (user?.role === "admin") {
+    mainLinks.push({
+      title: "Dashboard",
+      icon: <FaUser />,
+      path: "/admin",
+    });
+  }
 
   return (
     <>
