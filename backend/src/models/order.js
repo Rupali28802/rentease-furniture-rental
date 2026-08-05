@@ -88,6 +88,10 @@ const orderSchema = new mongoose.Schema(
       enum: ["active", "expired", "extended"],
       default: "active",
     },
+    rentalEndDate: { type: Date },
+    extendedTenure: Number,
+    returnRequested: { type: Boolean, default: false },
+    returnReason: String,
     refundAmount: { type: Number, default: 0 },
 
     // 🔹 Delivery logistics

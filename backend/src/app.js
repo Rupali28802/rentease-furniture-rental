@@ -15,6 +15,8 @@ import featureRoutes from "./routes/featureRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import helpRoutes from "./routes/helpRoutes.js";
 import partnerRoutes from "./routes/partnerRoutes.js";
+import settingsRoutes from "./routes/settingsRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -44,4 +46,6 @@ app.use("/api/coupons", cartRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/help", helpRoutes);
 app.use("/api/partner", partnerRoutes);
+app.use("/api/settings", settingsRoutes);
+app.use("/api/admin", adminRoutes);
 export default app;

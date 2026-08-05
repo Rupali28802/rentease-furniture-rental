@@ -21,9 +21,12 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
 
-    pricePerMonth: { type: Number, required: true, min: 0 },
+pricePerMonth: { type: Number, required: true, min: 0 },
     deposit: { type: Number, required: true, min: 0 },
     isNewArrival: { type: Boolean, default: false },
+    brand: { type: String },
+    featured: { type: Boolean, default: false },
+    isHidden: { type: Boolean, default: false },
 
     tenureOptions: {
       type: [Number],

@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      required:true,
+      required: true,
       min: 18,
     },
     email: {
@@ -24,10 +24,8 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     mobile: {
-
-      
       type: String,
-      required:true,
+      required: true,
       match: /^[0-9]{10}$/,
     },
 
@@ -35,6 +33,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["user", "admin", "vendor"],
       default: "user",
+    },
+    adminRole: {
+      type: String,
+      enum: ["superadmin", "manager", "support"],
+      default: "manager",
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
     resetPasswordToken: String,
 
