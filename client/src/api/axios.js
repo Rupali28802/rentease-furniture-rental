@@ -1,7 +1,7 @@
 import axios from "axios";
 
  export const api = axios.create({
-   baseURL: "https://rentease-furniture-rental.vercel.app/api",
+   baseURL: "https://rentease-furniture-rental-ur25.vercel.app/api",
  });
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
