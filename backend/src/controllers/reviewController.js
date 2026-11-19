@@ -1,5 +1,5 @@
 import Review from "../models/Review.js";
-import Order from "../models/Order.js";
+import Order from "../models/order.js";
 
 // ✅ Add review (only if user purchased product)
 export const addReview = async (req, res) => {
