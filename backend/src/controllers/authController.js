@@ -6,6 +6,8 @@ import Notification from "../models/Notification.js";
 import { sendEmail } from "../utils/sendEmail.js";
 // REGISTER USER
 export const registerUser = async (req, res) => {
+  console.log("REGISTER USER");
+  
   try {
     const { name, age, email, password, mobile, role } = req.body;
 
