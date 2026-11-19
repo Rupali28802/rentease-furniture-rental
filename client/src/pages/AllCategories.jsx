@@ -19,9 +19,7 @@ export default function AllCategories() {
       <div className="w-full px-6 mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold tracking-wide">
-            All Categories
-          </h2>
+          <h2 className="text-3xl font-bold tracking-wide">All Categories</h2>
           <p className="text-gray-500 mt-2">
             Browse our complete range of rental categories.
           </p>
@@ -45,7 +43,7 @@ export default function AllCategories() {
               >
                 {cat.image ? (
                   <img
-                    src={`http://localhost:5000/uploads/categories/${cat.image}`}
+                    src={`https://rentease-furniture-rental.vercel.app/api/uploads/categories/${cat.image}`}
                     alt={cat.name}
                     className="w-24 h-24 object-contain mb-3"
                   />
