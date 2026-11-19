@@ -24,6 +24,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.get("/",(req,res)=>{
+    res.send("Rentease backend is running")
+})
 
 // middleware
 app.use(express.json());
