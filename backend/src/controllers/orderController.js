@@ -1,6 +1,6 @@
 import Cart from "../models/Cart.js";
 import User from "../models/User.js";
-import Order from "../models/Order.js";
+import Order from "../models/order.js";
 import Product from "../models/Product.js";
 import Coupon from "../models/Coupon.js";
 import Notification from "../models/Notification.js";
