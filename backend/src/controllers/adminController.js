@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import Product from "../models/Product.js";
-import Order from "../models/Order.js";
+import Order from "../models/order.js";
 import Category from "../models/Category.js";
 import Coupon from "../models/Coupon.js";
 import Review from "../models/Review.js";
