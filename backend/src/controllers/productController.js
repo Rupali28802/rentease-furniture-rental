@@ -1,5 +1,5 @@
 import Product from "../models/Product.js";
-import Review from "../models/Review.js";
+import Review from "../models/review.js";
 import Notification from "../models/Notification.js";
 import fs from "fs";
 
