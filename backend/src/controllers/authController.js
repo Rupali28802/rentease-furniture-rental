@@ -141,7 +141,11 @@ Your account has been created successfully.`,
       token: generateToken({ id: user._id, role: user.role }),
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error, please try again later" });
+    console.error("REGISTER ERROR:", error);
+
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
