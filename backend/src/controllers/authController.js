@@ -7,7 +7,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 // REGISTER USER
 export const registerUser = async (req, res) => {
   console.log("REGISTER USER");
-  
+
   try {
     const { name, age, email, password, mobile, role } = req.body;
 
@@ -77,7 +77,8 @@ export const registerUser = async (req, res) => {
     const existingUser = await User.findOne({
       email: email.toLowerCase(),
     });
-
+    console.log("REGISTER EMAIL:", email.toLowerCase());
+    console.log("USER FOUND:", !!existingUser);
     if (existingUser) {
       return res.status(400).json({
         field: "email",
@@ -150,8 +151,6 @@ Your account has been created successfully.`,
     });
   }
 };
-
-
 
 // LOGIN USER
 export const loginUser = async (req, res) => {
