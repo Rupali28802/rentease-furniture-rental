@@ -4,15 +4,17 @@ import connectDB from "../src/config/db.js";
 const allowedOrigin = "https://rentease-furniture-rental-ukdn-one.vercel.app";
 
 export default async function handler(req, res) {
-  // CORS headers
+  console.log("VERCEL API HIT:", req.method, req.url);
+
   res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET,POST,PUT,DELETE,PATCH,OPTIONS",
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  // Handle browser preflight request
+  // IMPORTANT: preflight request
   if (req.method === "OPTIONS") {
     return res.status(204).end();
   }
