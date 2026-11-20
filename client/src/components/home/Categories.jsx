@@ -7,6 +7,8 @@ export default function ShopByCategory() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("SHOP CATEGORY API:",api.defaults.baseURL+"/categories");
+    
     api
       .get("/categories")
       .then((res) => setCategories(res.data))
@@ -55,7 +57,7 @@ export default function ShopByCategory() {
               {/* ✅ If you want to use images from backend */}
               {cat.image && (
                 <img
-                  src={`rentease-furniture-rental-ur25.vercel.app/api/uploads/categories/${cat.image}`}
+                  src={`https://rentease-furniture-rental-ur25.vercel.app/api/uploads/categories/${cat.image}`}
                   alt={cat.name}
                   className="w-20 h-20 object-contain mb-3"
                 />
