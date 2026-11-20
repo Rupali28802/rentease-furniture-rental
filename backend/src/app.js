@@ -28,10 +28,23 @@ app.get("/",(req,res)=>{
     res.send("Rentease backend is running")
 })
 
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "https://rentease-furniture-rental-ukdn-one.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }),
+);
+
 // middleware
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-app.use(cors());
+
 
 // auth route
 app.use("/api/auth", authRoutes);
