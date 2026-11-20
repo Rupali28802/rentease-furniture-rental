@@ -151,6 +151,8 @@ Your account has been created successfully.`,
   }
 };
 
+
+
 // LOGIN USER
 export const loginUser = async (req, res) => {
   try {
