@@ -27,6 +27,12 @@ const app = express();
 app.get("/",(req,res)=>{
     res.send("Rentease backend is running")
 })
+app.get("/api/test", (req, res) => {
+  res.json({
+    success: true,
+    message: "API is working",
+  });
+});
 
 app.use(
   cors({
