@@ -55,7 +55,7 @@ export default function ShopByCategory() {
               {/* ✅ If you want to use images from backend */}
               {cat.image && (
                 <img
-                  src={`https://rentease-furniture-rental.vercel.app/api/uploads/categories/${cat.image}`}
+                  src={`rentease-furniture-rental-ur25.vercel.app/api/uploads/categories/${cat.image}`}
                   alt={cat.name}
                   className="w-20 h-20 object-contain mb-3"
                 />

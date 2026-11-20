@@ -10,7 +10,7 @@ export default function CategoryMenu() {
 
   useEffect(() => {
     axios
-      .get("https://rentease-furniture-rental.vercel.app/api/categories")
+      .get("rentease-furniture-rental-ur25.vercel.app/api/categories")
       .then((res) => {
         console.log("Categories API Response:", res.data);
         setCategories(res.data);
