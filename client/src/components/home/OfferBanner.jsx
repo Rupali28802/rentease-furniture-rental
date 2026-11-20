@@ -47,6 +47,7 @@ const OfferBanner = () => {
             className="relative h-[180px] rounded-lg overflow-hidden bg-[#f5f5f5] cursor-pointer"
           >
             <img
+              // src={`https://rentease-furniture-rental-ur25.vercel.app/api/${banner.image}`}
               src={`https://rentease-furniture-rental-ur25.vercel.app/api/${banner.image}`}
               alt={banner.title}
               className="absolute right-0 top-0 h-full w-[45%] object-cover"

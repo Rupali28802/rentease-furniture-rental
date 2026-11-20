@@ -33,7 +33,7 @@ const HeroBannerSlider = () => {
           key={i}
           className={`absolute inset-0 transition-opacity   duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
           style={{
-            backgroundImage: `url(https://rentease-furniture-rental-ur25.vercel.app/api/uploads/hero/${banner.image})`,
+            backgroundImage: `url(https://rentease-furniture-rental-ur25.vercel.app/uploads/hero/${banner.image})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
