@@ -1,21 +1,24 @@
 import app from "../src/app.js";
 import connectDB from "../src/config/db.js";
 
-let isConnected = false;
+const allowedOrigin = "https://rentease-furniture-rental-ukdn-one.vercel.app";
 
 export default async function handler(req, res) {
-  if (req.method === "GET" && req.url === "/api/test") {
-    return res.status(200).json({
-      success: true,
-      message: "Vercel API is working",
-    });
+  // CORS headers
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,DELETE,PATCH,OPTIONS",
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // Handle browser preflight request
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
   }
 
   try {
-    if (!isConnected) {
-      await connectDB();
-      isConnected = true;
-    }
+    await connectDB();
 
     return app(req, res);
   } catch (error) {
