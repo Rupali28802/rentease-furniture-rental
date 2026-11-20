@@ -1,39 +1,17 @@
 import app from "../src/app.js";
 import connectDB from "../src/config/db.js";
-import cors from "cors";
-
-const corsMiddleware = cors({
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://rentease-furniture-rental-ukdn-one.vercel.app",
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-});
 
 let isConnected = false;
 
 export default async function handler(req, res) {
-  try {
-    // Handle CORS before anything else
-    await new Promise((resolve, reject) => {
-      corsMiddleware(req, res, (error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
+  if (req.method === "GET" && req.url === "/api/test") {
+    return res.status(200).json({
+      success: true,
+      message: "Vercel API is working",
     });
+  }
 
-    // Handle browser preflight request
-    if (req.method === "OPTIONS") {
-      return res.status(204).end();
-    }
-
-    // Connect MongoDB
+  try {
     if (!isConnected) {
       await connectDB();
       isConnected = true;
