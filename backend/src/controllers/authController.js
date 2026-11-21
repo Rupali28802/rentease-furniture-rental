@@ -74,9 +74,10 @@ export const registerUser = async (req, res) => {
     }
 const normalizedEmail = email.toLowerCase();
 
-console.log("================================");
 console.log("REGISTER EMAIL:", email);
 console.log("NORMALIZED EMAIL:", normalizedEmail);
+console.log("DB NAME:", User.db.name);
+
 
 const existingUser = await User.findOne({
   email: normalizedEmail,
