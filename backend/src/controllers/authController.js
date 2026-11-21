@@ -72,12 +72,25 @@ export const registerUser = async (req, res) => {
         message: "Password must be 6+ characters",
       });
     }
+const normalizedEmail = email.toLowerCase();
 
+console.log("================================");
+console.log("REGISTER EMAIL:", email);
+console.log("NORMALIZED EMAIL:", normalizedEmail);
 
-    // CHECK EXISTING USER
-    const existingUser = await User.findOne({
-      email: email.toLowerCase(),
-    });
+const existingUser = await User.findOne({
+  email: normalizedEmail,
+});
+
+console.log("EXISTING USER:", existingUser);
+console.log("================================");
+
+if (existingUser) {
+  return res.status(400).json({
+    field: "email",
+    message: "Email already registered",
+  });
+}
 
     if (existingUser) {
       return res.status(400).json({

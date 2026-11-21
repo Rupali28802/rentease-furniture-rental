@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import addressRoutes from "./routes/addressRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -34,18 +33,18 @@ app.get("/api/test", (req, res) => {
   });
 });
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      "https://rentease-furniture-rental-ukdn-one.vercel.app",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-);
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:5173",
+//       "http://localhost:3000",
+//       "https://rentease-furniture-rental-ukdn-one.vercel.app",
+//     ],
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+//   }),
+// );
 
 // middleware
 app.use(express.json());
