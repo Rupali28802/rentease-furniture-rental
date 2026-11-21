@@ -92,12 +92,7 @@ if (existingUser) {
   });
 }
 
-    if (existingUser) {
-      return res.status(400).json({
-        field: "email",
-        message: "Email already registered",
-      });
-    }
+    
 
     // HASH PASSWORD
     const salt = await bcrypt.genSalt(10);
