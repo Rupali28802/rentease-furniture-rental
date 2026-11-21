@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (formData) => {
     try {
       const res = await api.post("/auth/register", formData);
+console.log("REGISTER RESPONSE:",res.data);
 
       setUser(res.data.user);
       setToken(res.data.token);
@@ -34,9 +35,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("token", res.data.token);
 
       return res.data;
-      console.log(data);
-      console.log(res.data.token);
+     
     } catch (error) {
+      console.log("REGISTER ERROR:",error);
+      console.log("REGISTER ERROR RESPONSE:",error.response?.data);
+      
+      
       throw (
         error.response?.data || {
           message: "Registration failed. Please try again.",
