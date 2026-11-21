@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   console.log("VERCEL API HIT:", req.method, req.url);
 
   const origin = req.headers.origin;
-
+console.log("REQUEST ORIGIN:", origin);
   if (allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
