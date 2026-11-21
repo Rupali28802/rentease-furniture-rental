@@ -1,7 +1,7 @@
 // controllers/categoryController.js
 import Category from "../models/Category.js";
-import fs from "fs";
-import path from "path";
+// import fs from "fs";
+// import path from "path";
 
 // GET ALL
 export const getCategories = async (req, res) => {
@@ -18,13 +18,13 @@ export const getCategories = async (req, res) => {
 // CREATE
 export const addCategory = async (req, res) => {
   try {
-    const { name, slug } = req.body;
+    const { name, slug,image } = req.body;
     // if (!req.file) return res.status(400).json({ error: "Image required" });
 
     const category = new Category({
       name,
       slug,
-      image: req.file ? req.file.filename : null,
+      image: image || null,
     });
 
     await category.save();
@@ -52,6 +52,7 @@ export const updateCategory = async (req, res) => {
 
     category.name = req.body.name || category.name;
     category.slug = req.body.slug || category.slug;
+    category.image = req.body.image||category.image;
     category.isActive = req.body.isActive ?? category.isActive;
 
     await category.save();
