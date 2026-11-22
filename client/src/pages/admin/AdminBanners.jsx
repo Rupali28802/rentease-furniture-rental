@@ -217,20 +217,13 @@ const AdminBanners = () => {
   // =========================
   // IMAGE URL
   // =========================
-  const getImageUrl = (image) => {
-    if (!image) return "";
+ const getImageUrl = (banner) => {
+   if (!banner?._id) return "";
 
-    // Complete URL
-    if (image.startsWith("http://") || image.startsWith("https://")) {
-      return image;
-    }
+   const baseURL = api.defaults.baseURL?.replace(/\/$/, "");
 
-    // Relative backend path
-    const baseURL = api.defaults.baseURL?.replace(/\/api\/?$/, "");
-
-    return `${baseURL}${image.startsWith("/") ? image : `/${image}`}`;
-  };
-
+   return `${baseURL}/hero-banners/${banner._id}/image`;
+ };
   return (
     <div className="space-y-6">
 
@@ -452,7 +445,7 @@ const AdminBanners = () => {
                   <td className="px-4 py-3">
                     {b.image ? (
                       <img
-                        src={getImageUrl(b.image)}
+                        src={getImageUrl(b)}
                         alt={b.title}
                         className="w-20 h-12 object-cover rounded"
                       />
