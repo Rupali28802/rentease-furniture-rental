@@ -59,6 +59,22 @@ export const addBanner = async (req, res) => {
   }
 };
 
+// GET ALL BANNERS FOR ADMIN
+export const getAdminBanners = async (req, res) => {
+  try {
+    const banners = await HeroBanner.find().sort({ order: 1 });
+
+    res.status(200).json({
+      banners,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // UPDATE BANNER
 
 export const updateBanner = async (req, res) => {
