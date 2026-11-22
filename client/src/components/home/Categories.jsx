@@ -34,16 +34,12 @@ export default function ShopByCategory() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold tracking-wide">Shop by Category</h2>
-          <a
-            href="/categories"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate("/categories");
-            }}
-            className="text-green-600 font-medium hover:underline"
+          <button
+            onClick={() => navigate("/categories")}
+            className="text-green-900 font-medium hover:underline"
           >
             View All
-          </a>
+          </button>
         </div>
 
         {/* Category Grid */}
@@ -55,15 +51,23 @@ export default function ShopByCategory() {
               className="flex flex-col items-center justify-center p-4 bg-white shadow rounded hover:shadow-lg transition"
             >
               {/* ✅ If you want to use images from backend */}
-              {cat.image && (
+              {cat.image ? (
                 <img
                   // src={`https://rentease-furniture-rental-ur25.vercel.app/api/uploads/categories/${cat.image}`}
-                  src={`https://rentease-furniture-rental-ur25.vercel.app/uploads/categories/${cat.image}`}
+                  src={cat.image}
                   alt={cat.name}
                   className="w-20 h-20 object-contain mb-3"
+                  onError={(e) => {
+                    console.error(
+                      "CATEGORY IMAGE NOT FOUND:",
+                      e.currentTarget.src,
+                    );
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
+              ) : (
+                <span className="text-gray-800 font-medium">{cat.name}</span>
               )}
-              <span className="text-gray-800 font-medium">{cat.name}</span>
             </Link>
           ))}
         </div>

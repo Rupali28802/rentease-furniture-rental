@@ -43,7 +43,7 @@ export default function AllCategories() {
               >
                 {cat.image ? (
                   <img
-                    src={`https://rentease-furniture-rental-ur25.vercel.app/api/uploads/categories/${cat.image}`}
+                    src={cat.image}
                     alt={cat.name}
                     className="w-24 h-24 object-contain mb-3"
                   />
