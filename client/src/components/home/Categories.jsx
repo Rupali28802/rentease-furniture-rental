@@ -68,6 +68,7 @@ export default function ShopByCategory() {
               ) : (
                 <span className="text-gray-800 font-medium">{cat.name}</span>
               )}
+              <span className="text-gray-800 font-medium">{cat.name}</span>
             </Link>
           ))}
         </div>
