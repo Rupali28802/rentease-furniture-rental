@@ -217,13 +217,11 @@ const AdminBanners = () => {
   // =========================
   // IMAGE URL
   // =========================
- const getImageUrl = (banner) => {
-   if (!banner?._id) return "";
+const getImageUrl = (banner) => {
+  if (!banner?.image?.data) return "";
 
-   const baseURL = api.defaults.baseURL?.replace(/\/$/, "");
-
-   return `${baseURL}/hero-banners/${banner._id}/image`;
- };
+  return `data:${banner.image.contentType};base64,${banner.image.data}`;
+};
   return (
     <div className="space-y-6">
 
