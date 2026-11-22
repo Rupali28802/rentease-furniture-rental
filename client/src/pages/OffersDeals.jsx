@@ -108,7 +108,7 @@ const OffersDeals = () => {
               >
                 {banner.image && (
                   <img
-                    src={`https://rentease-furniture-rental-ur25.vercel.app/api/${banner.image}`}
+                    src={`https://rentease-furniture-rental-ur25.vercel.app${banner.image}`}
                     alt={banner.title}
                     className="absolute right-0 top-0 h-full w-[45%] object-cover"
                   />
