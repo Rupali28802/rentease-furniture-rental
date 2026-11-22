@@ -29,7 +29,7 @@ const AdminBanners = () => {
     try {
       setLoading(true);
 
-      const res = await api.get("/admin/banners");
+      const res = await api.get("/hero-banners/admin");
 
       setBanners(res.data.banners || res.data || []);
     } catch (error) {
@@ -91,7 +91,7 @@ const AdminBanners = () => {
       }
 
       if (editingId) {
-        await api.put(`/admin/banners/${editingId}`, formData);
+        await api.put(`/hero-banners/${editingId}`, formData);
         alert("Banner updated successfully");
       } else {
         if (!image) {
@@ -100,7 +100,7 @@ const AdminBanners = () => {
           return;
         }
 
-        await api.post("/admin/banners", formData);
+       await api.post("/hero-banners", formData);
         alert("Banner added successfully");
       }
 
@@ -173,7 +173,7 @@ const AdminBanners = () => {
     if (!window.confirm("Delete this banner?")) return;
 
     try {
-      await api.delete(`/admin/banners/${id}`);
+     await api.delete(`/hero-banners/${id}`);
 
       alert("Banner deleted successfully");
 
