@@ -24,14 +24,23 @@ const heroBannerSchema = new mongoose.Schema(
       default: "/shop",
     },
 
+    // Image is stored directly in MongoDB
     image: {
-      type: String,
-      required: true,
+      data: {
+        type: Buffer,
+        required: true,
+      },
+      contentType: {
+        type: String,
+        required: true,
+      },
     },
+
     features: {
       type: [String],
       default: [],
     },
+
     isActive: {
       type: Boolean,
       default: true,
@@ -44,7 +53,8 @@ const heroBannerSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 export default mongoose.model("HeroBanner", heroBannerSchema);
+

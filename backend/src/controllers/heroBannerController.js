@@ -1,17 +1,20 @@
 import HeroBanner from "../models/HeroBanner.js";
-import fs from "fs";
-import path from "path";
 
-// GET ALL BANNERS
-
+// ===============================
+// GET ALL ACTIVE HERO BANNERS
+// ===============================
 export const getBanners = async (req, res) => {
   try {
     const banners = await HeroBanner.find({
       isActive: true,
-    }).sort({ order: 1 });
+    })
+      .select("-image.data")
+      .sort({ order: 1 });
 
     res.status(200).json(banners);
   } catch (error) {
+    console.error("GET HERO BANNERS ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -19,14 +22,21 @@ export const getBanners = async (req, res) => {
   }
 };
 
-// CREATE BANNER
-
+// ===============================
+// CREATE HERO BANNER
+// ===============================
 export const addBanner = async (req, res) => {
   try {
-    const { title, subtitle, buttonText, link, order,features } = req.body;
+    const {
+      title,
+      subtitle,
+      buttonText,
+      link,
+      order,
+      features,
+    } = req.body;
 
-    // IMAGE VALIDATION
-
+    // Check image
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -34,24 +44,55 @@ export const addBanner = async (req, res) => {
       });
     }
 
-   const image = `/uploads/hero/${req.file.filename}`;
+    // Parse features
+    let parsedFeatures = [];
 
+    if (features) {
+      try {
+        parsedFeatures = JSON.parse(features);
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid features JSON",
+        });
+      }
+    }
+
+    // Save image directly into MongoDB
     const banner = await HeroBanner.create({
       title,
       subtitle,
       buttonText,
       link,
-      image,
-      order,
-      features: features ? JSON.parse(features) : [],
+      order: order ? Number(order) : 0,
+      features: parsedFeatures,
+
+      image: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      },
     });
 
     res.status(201).json({
       success: true,
-      message: "Banner created successfully",
-      banner,
+      message: "Hero banner created successfully",
+
+      banner: {
+        _id: banner._id,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        buttonText: banner.buttonText,
+        link: banner.link,
+        order: banner.order,
+        features: banner.features,
+        isActive: banner.isActive,
+        createdAt: banner.createdAt,
+        updatedAt: banner.updatedAt,
+      },
     });
   } catch (error) {
+    console.error("ADD HERO BANNER ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -59,15 +100,21 @@ export const addBanner = async (req, res) => {
   }
 };
 
-// GET ALL BANNERS FOR ADMIN
+// ===============================
+// GET ALL HERO BANNERS FOR ADMIN
+// ===============================
 export const getAdminBanners = async (req, res) => {
   try {
-    const banners = await HeroBanner.find().sort({ order: 1 });
+    const banners = await HeroBanner.find()
+      .select("-image.data")
+      .sort({ order: 1 });
 
     res.status(200).json({
       banners,
     });
   } catch (error) {
+    console.error("GET ADMIN HERO BANNERS ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -75,8 +122,9 @@ export const getAdminBanners = async (req, res) => {
   }
 };
 
-// UPDATE BANNER
-
+// ===============================
+// UPDATE HERO BANNER
+// ===============================
 export const updateBanner = async (req, res) => {
   try {
     const { id } = req.params;
@@ -90,62 +138,99 @@ export const updateBanner = async (req, res) => {
       });
     }
 
-    // =========================
-    // ONLY UPDATE IMAGE
-    // =========================
-
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select a new image",
-      });
+    // ===============================
+    // UPDATE IMAGE
+    // ===============================
+    if (req.file) {
+      banner.image = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
     }
 
-    // Delete old image if it exists
-    if (banner.image) {
-      const oldImagePath = path.join(
-        process.cwd(),
-        "uploads",
-        "hero",
-        path.basename(banner.image)
-      );
+    // ===============================
+    // UPDATE OTHER FIELDS
+    // ===============================
+    if (req.body.title !== undefined) {
+      banner.title = req.body.title;
+    }
 
+    if (req.body.subtitle !== undefined) {
+      banner.subtitle = req.body.subtitle;
+    }
+
+    if (req.body.buttonText !== undefined) {
+      banner.buttonText = req.body.buttonText;
+    }
+
+    if (req.body.link !== undefined) {
+      banner.link = req.body.link;
+    }
+
+    if (
+      req.body.order !== undefined &&
+      req.body.order !== ""
+    ) {
+      banner.order = Number(req.body.order);
+    }
+
+    if (req.body.isActive !== undefined) {
+      banner.isActive =
+        req.body.isActive === true ||
+        req.body.isActive === "true";
+    }
+
+    // ===============================
+    // UPDATE FEATURES
+    // ===============================
+    if (
+      req.body.features !== undefined &&
+      req.body.features !== ""
+    ) {
       try {
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
-        }
+        banner.features = JSON.parse(req.body.features);
       } catch (error) {
-        console.error(
-          "Old image delete failed:",
-          error.message
-        );
+        return res.status(400).json({
+          success: false,
+          message: "Invalid features JSON",
+        });
       }
     }
 
-    // Save new image path
-    banner.image = `/uploads/hero/${req.file.filename}`;
-
-    // Save document
     await banner.save();
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      message: "Hero banner image updated successfully",
-      banner,
+      message: req.file
+        ? "Hero banner image updated successfully"
+        : "Hero banner updated successfully",
+
+      banner: {
+        _id: banner._id,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        buttonText: banner.buttonText,
+        link: banner.link,
+        order: banner.order,
+        features: banner.features,
+        isActive: banner.isActive,
+        createdAt: banner.createdAt,
+        updatedAt: banner.updatedAt,
+      },
     });
   } catch (error) {
-    console.error("UPDATE HERO IMAGE ERROR:", error);
+    console.error("UPDATE HERO BANNER ERROR:", error);
 
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-
-// DELETE BANNER
-
+// ===============================
+// DELETE HERO BANNER
+// ===============================
 export const deleteBanner = async (req, res) => {
   try {
     const { id } = req.params;
@@ -159,29 +244,22 @@ export const deleteBanner = async (req, res) => {
       });
     }
 
-    // DELETE IMAGE
-
-    if (banner.image) {
-      const oldImagePath = path.join(
-        "uploads/hero",
-        path.basename(banner.image),
-      );
-
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
-      }
-    }
+    // Image is inside MongoDB.
+    // No fs.unlinkSync() needed.
 
     await banner.deleteOne();
 
     res.status(200).json({
       success: true,
-      message: "Banner deleted successfully",
+      message: "Hero banner deleted successfully",
     });
   } catch (error) {
+    console.error("DELETE HERO BANNER ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
+
