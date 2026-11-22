@@ -36,7 +36,7 @@ export default function ShopByCategory() {
           <h2 className="text-2xl font-bold tracking-wide">Shop by Category</h2>
           <button
             onClick={() => navigate("/categories")}
-            className="text-green-900 font-medium hover:underline"
+            className="text-green-600 font-medium hover:underline"
           >
             View All
           </button>
