@@ -8,10 +8,20 @@ export const getBanners = async (req, res) => {
     const banners = await HeroBanner.find({
       isActive: true,
     })
-      .select("-image.data")
-      .sort({ order: 1 });
+      .sort({ order: 1 })
+      .lean();
 
-    res.status(200).json(banners);
+    const formattedBanners = banners.map((banner) => ({
+      ...banner,
+      image: banner.image
+        ? {
+            data: banner.image.data ? banner.image.data.toString("base64") : "",
+            contentType: banner.image.contentType || "",
+          }
+        : null,
+    }));
+
+    res.status(200).json(formattedBanners);
   } catch (error) {
     console.error("GET HERO BANNERS ERROR:", error);
 
@@ -105,12 +115,20 @@ export const addBanner = async (req, res) => {
 // ===============================
 export const getAdminBanners = async (req, res) => {
   try {
-    const banners = await HeroBanner.find()
-      .select("-image.data")
-      .sort({ order: 1 });
+    const banners = await HeroBanner.find().sort({ order: 1 }).lean();
+
+    const formattedBanners = banners.map((banner) => ({
+      ...banner,
+      image: banner.image
+        ? {
+            data: banner.image.data ? banner.image.data.toString("base64") : "",
+            contentType: banner.image.contentType || "",
+          }
+        : null,
+    }));
 
     res.status(200).json({
-      banners,
+      banners: formattedBanners,
     });
   } catch (error) {
     console.error("GET ADMIN HERO BANNERS ERROR:", error);
@@ -121,7 +139,6 @@ export const getAdminBanners = async (req, res) => {
     });
   }
 };
-
 // ===============================
 // UPDATE HERO BANNER
 // ===============================
