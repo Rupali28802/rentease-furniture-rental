@@ -76,19 +76,10 @@ export const getAdminBanners = async (req, res) => {
 };
 
 // UPDATE BANNER
+
 export const updateBanner = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const {
-      title,
-      subtitle,
-      buttonText,
-      link,
-      isActive,
-      order,
-      features,
-    } = req.body;
 
     const banner = await HeroBanner.findById(id);
 
@@ -100,90 +91,50 @@ export const updateBanner = async (req, res) => {
     }
 
     // =========================
-    // UPDATE IMAGE
+    // ONLY UPDATE IMAGE
     // =========================
 
-    if (req.file) {
-      // Delete old image
-      if (banner.image) {
-        const oldImagePath = path.join(
-          process.cwd(),
-          "uploads",
-          "hero",
-          path.basename(banner.image)
-        );
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select a new image",
+      });
+    }
 
+    // Delete old image if it exists
+    if (banner.image) {
+      const oldImagePath = path.join(
+        process.cwd(),
+        "uploads",
+        "hero",
+        path.basename(banner.image)
+      );
+
+      try {
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
         }
-      }
-
-      // Save new image path
-      banner.image = `/uploads/hero/${req.file.filename}`;
-    }
-
-    // =========================
-    // UPDATE TEXT FIELDS
-    // =========================
-
-    if (title !== undefined) {
-      banner.title = title;
-    }
-
-    if (subtitle !== undefined) {
-      banner.subtitle = subtitle;
-    }
-
-    if (buttonText !== undefined) {
-      banner.buttonText = buttonText;
-    }
-
-    if (link !== undefined) {
-      banner.link = link;
-    }
-
-    // =========================
-    // UPDATE ACTIVE
-    // =========================
-
-    if (isActive !== undefined) {
-      banner.isActive =
-        isActive === true ||
-        isActive === "true";
-    }
-
-    // =========================
-    // UPDATE ORDER
-    // =========================
-
-    if (order !== undefined && order !== "") {
-      banner.order = Number(order);
-    }
-
-    // =========================
-    // UPDATE FEATURES
-    // =========================
-
-    if (features !== undefined && features !== "") {
-      try {
-        banner.features = JSON.parse(features);
       } catch (error) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid features JSON",
-        });
+        console.error(
+          "Old image delete failed:",
+          error.message
+        );
       }
     }
 
+    // Save new image path
+    banner.image = `/uploads/hero/${req.file.filename}`;
+
+    // Save document
     await banner.save();
 
     return res.status(200).json({
       success: true,
-      message: "Banner updated successfully",
+      message: "Hero banner image updated successfully",
       banner,
     });
   } catch (error) {
-    console.error("UPDATE HERO BANNER ERROR:", error);
+    console.error("UPDATE HERO IMAGE ERROR:", error);
 
     return res.status(500).json({
       success: false,
@@ -191,6 +142,7 @@ export const updateBanner = async (req, res) => {
     });
   }
 };
+
 
 // DELETE BANNER
 
