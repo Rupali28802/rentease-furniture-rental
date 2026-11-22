@@ -1,108 +1,208 @@
-import PromoBanner from "../models/PromoBanner.js";
-import fs from "fs";
-import path from "path";
 
-// GET all promo banners
+import PromoBanner from "../models/PromoBanner.js";
+// GET ALL PROMO BANNERS
+
 export const getPromoBanners = async (req, res) => {
   try {
-    const banners = await PromoBanner.find();
-    res.json(banners);
+    const banners = await PromoBanner.find()
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const formattedBanners = banners.map((banner) => ({
+      ...banner,
+
+      image: banner.image
+        ? {
+            data: banner.image.data
+              ? banner.image.data.toString("base64")
+              : "",
+            contentType: banner.image.contentType || "",
+          }
+        : null,
+    }));
+
+    res.status(200).json(formattedBanners);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("GET PROMO BANNERS ERROR:", err);
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 };
 
-// CREATE promo banner
+// CREATE PROMO BANNER
 export const createPromoBanner = async (req, res) => {
   try {
-    const { type, title, subtitle, buttonText, buttonLink } = req.body;
-  console.log("CONTENT TYPE:", req.headers["content-type"]);
-  console.log("BODY:", req.body);
-  console.log("FILE:", req.file);
-    
-
-    if (!req.file) {
-      return res.status(400).json({ message: "Banner image is required" });
-    }
-
-    const image = `/uploads/promo/${req.file.filename}`;
-
-    const banner = new PromoBanner({
-      type:"offer",
+    const {
+      type,
       title,
       subtitle,
       buttonText,
       buttonLink,
-      image,
+    } = req.body;
+
+    console.log("CONTENT TYPE:", req.headers["content-type"]);
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+
+    // Check image
+    if (!req.file) {
+      return res.status(400).json({
+        message: "Banner image is required",
+      });
+    }
+
+    // Save image directly into MongoDB
+    const banner = new PromoBanner({
+      type: type || "offer",
+      title,
+      subtitle,
+      buttonText,
+      buttonLink,
+
+      image: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      },
     });
 
     await banner.save();
- 
 
+    res.status(201).json({
+      success: true,
+      message: "Promo banner created successfully",
 
-    res.status(201).json(banner);
+      banner: {
+        _id: banner._id,
+        type: banner.type,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        buttonText: banner.buttonText,
+        buttonLink: banner.buttonLink,
+        createdAt: banner.createdAt,
+        updatedAt: banner.updatedAt,
+      },
+    });
   } catch (err) {
-      if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
-    res.status(500).json({ error: err.message });
+    console.error("CREATE PROMO BANNER ERROR:", err);
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 };
 
-// UPDATE promo banner
+// UPDATE PROMO BANNER
 export const updatePromoBanner = async (req, res) => {
   try {
     const { id } = req.params;
-    const { type, title, subtitle, buttonText, buttonLink } = req.body;
+
+    const {
+      type,
+      title,
+      subtitle,
+      buttonText,
+      buttonLink,
+    } = req.body;
 
     const banner = await PromoBanner.findById(id);
-    if (!banner) return res.status(404).json({ error: "Banner not found" });
 
-    if (req.file) {
-      if (banner.image) {
-        const oldImagePath = path.join(
-          "uploads/promo",
-          path.basename(banner.image),
-        );
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
-        }
-      }
-      banner.image = `/uploads/promo/${req.file.filename}`;
+    if (!banner) {
+      return res.status(404).json({
+        error: "Banner not found",
+      });
     }
 
-    banner.type = type || banner.type;
-    banner.title = title || banner.title;
-    banner.subtitle = subtitle || banner.subtitle;
-    banner.buttonText = buttonText || banner.buttonText;
-    banner.buttonLink = buttonLink || banner.buttonLink;
+    // UPDATE IMAGE
+  
+    if (req.file) {
+      banner.image = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+    }
+
+    
+    // UPDATE OTHER FIELDS
+   
+    if (type !== undefined && type !== "") {
+      banner.type = type;
+    }
+
+    if (title !== undefined && title !== "") {
+      banner.title = title;
+    }
+
+    if (subtitle !== undefined) {
+      banner.subtitle = subtitle;
+    }
+
+    if (buttonText !== undefined && buttonText !== "") {
+      banner.buttonText = buttonText;
+    }
+
+    if (buttonLink !== undefined && buttonLink !== "") {
+      banner.buttonLink = buttonLink;
+    }
 
     await banner.save();
-    res.json(banner);
+
+    res.status(200).json({
+      success: true,
+
+      message: req.file
+        ? "Promo banner image updated successfully"
+        : "Promo banner updated successfully",
+
+      banner: {
+        _id: banner._id,
+        type: banner.type,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        buttonText: banner.buttonText,
+        buttonLink: banner.buttonLink,
+        createdAt: banner.createdAt,
+        updatedAt: banner.updatedAt,
+      },
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("UPDATE PROMO BANNER ERROR:", err);
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 };
 
-// DELETE promo banner
+
+// DELETE PROMO BANNER
+
 export const deletePromoBanner = async (req, res) => {
   try {
     const banner = await PromoBanner.findById(req.params.id);
-    if (!banner) return res.status(404).json({ message: "Banner not found" });
 
-    if (banner.image) {
-      const oldImagePath = path.join(
-        "uploads/promo",
-        path.basename(banner.image),
-      );
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
-      }
+    if (!banner) {
+      return res.status(404).json({
+        message: "Banner not found",
+      });
     }
 
-    await PromoBanner.findByIdAndDelete(req.params.id);
-    res.json({ message: "Banner deleted successfully" });
+    // Image is stored inside MongoDB.
+    // No fs/path delete required.
+
+    await banner.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "Promo banner deleted successfully",
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("DELETE PROMO BANNER ERROR:", err);
+
+    res.status(500).json({
+      error: err.message,
+    });
   }
 };
+

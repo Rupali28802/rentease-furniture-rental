@@ -7,8 +7,18 @@ const bannerSchema = new mongoose.Schema(
     title: { type: String, required: true },
     subtitle: { type: String },
     buttonText: { type: String, required: true },
-    buttonLink: { type: String, required: true }, 
-    image: { type: String, required: true },
+    buttonLink: { type: String, required: true },
+    image: {
+      data: {
+        type: Buffer,
+        required: true,
+      },
+
+      contentType: {
+        type: String,
+        required: true,
+      },
+    },
   },
   { timestamps: true },
 );
