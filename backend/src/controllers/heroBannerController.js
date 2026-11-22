@@ -76,12 +76,19 @@ export const getAdminBanners = async (req, res) => {
 };
 
 // UPDATE BANNER
-
 export const updateBanner = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { title, subtitle, buttonText, link, isActive, order,features } = req.body;
+    const {
+      title,
+      subtitle,
+      buttonText,
+      link,
+      isActive,
+      order,
+      features,
+    } = req.body;
 
     const banner = await HeroBanner.findById(id);
 
@@ -92,15 +99,18 @@ export const updateBanner = async (req, res) => {
       });
     }
 
-    // NEW IMAGE UPLOAD
+    // =========================
+    // UPDATE IMAGE
+    // =========================
 
     if (req.file) {
-      // DELETE OLD IMAGE
-
+      // Delete old image
       if (banner.image) {
         const oldImagePath = path.join(
-          "uploads/hero",
-          path.basename(banner.image),
+          process.cwd(),
+          "uploads",
+          "hero",
+          path.basename(banner.image)
         );
 
         if (fs.existsSync(oldImagePath)) {
@@ -108,30 +118,74 @@ export const updateBanner = async (req, res) => {
         }
       }
 
+      // Save new image path
       banner.image = `/uploads/hero/${req.file.filename}`;
     }
 
-    // UPDATE FIELDS
+    // =========================
+    // UPDATE TEXT FIELDS
+    // =========================
 
-    banner.title = title || banner.title;
-    banner.subtitle = subtitle || banner.subtitle;
-    banner.buttonText = buttonText || banner.buttonText;
-    banner.link = link || banner.link;
+    if (title !== undefined) {
+      banner.title = title;
+    }
 
-    banner.isActive = isActive !== undefined ? isActive : banner.isActive;
+    if (subtitle !== undefined) {
+      banner.subtitle = subtitle;
+    }
 
-    banner.order = order !== undefined ? order : banner.order;
-    banner.features = features ? JSON.parse(features) : banner.features;
+    if (buttonText !== undefined) {
+      banner.buttonText = buttonText;
+    }
+
+    if (link !== undefined) {
+      banner.link = link;
+    }
+
+    // =========================
+    // UPDATE ACTIVE
+    // =========================
+
+    if (isActive !== undefined) {
+      banner.isActive =
+        isActive === true ||
+        isActive === "true";
+    }
+
+    // =========================
+    // UPDATE ORDER
+    // =========================
+
+    if (order !== undefined && order !== "") {
+      banner.order = Number(order);
+    }
+
+    // =========================
+    // UPDATE FEATURES
+    // =========================
+
+    if (features !== undefined && features !== "") {
+      try {
+        banner.features = JSON.parse(features);
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid features JSON",
+        });
+      }
+    }
 
     await banner.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Banner updated successfully",
       banner,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("UPDATE HERO BANNER ERROR:", error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
